@@ -1,0 +1,79 @@
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  color: #333;
+  margin-left: 14px;
+}
+
+header nav > a {
+  margin: 0 1px;
+}
+
+#main {
+  margin-left: 14px;
+}
+
+#main p, blockquote, div.code {
+  width: 400px;
+}
+
+#main p {
+  margin-top: 20px;
+}
+
+#main blockquote {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 17px;
+  font-style: italic;
+  color: rgba(0,0,0,0.75);
+
+  margin: 22px 0;
+
+}
+
+.code {
+  background-image: linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
+  background-image: -o-linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
+  background-image: -moz-linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
+  background-image: -webkit-linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
+  background-image: -ms-linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.0, rgb(246,246,246)),
+    color-stop(1.0, rgb(243,243,243))
+  );
+
+  border: 1px solid rgb(197, 197, 197);
+  border-radius: 4px;
+}
+
+.code > pre {
+  font-family: "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 11px;
+  line-height: 18px;
+  color: #333;
+
+  margin: 0;
+  padding: 8px;
+}
+
+
+#copyright {
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 86px;
+  opacity: 0.2;
+}
+
+#main .spinner {
+  position: absolute;
+  left: 500px;
+}
+
+#main .spinner .topics {
+  list-style-type: none;
+}

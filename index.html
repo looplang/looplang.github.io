@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>loop - a functional programming language on the JVM</title>
+
+  <link rel="stylesheet" href="main.css">
+  <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="js/"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+<header>
+  <h1>loop</h1>
+  <nav>
+    <a href="#">About</a>
+    <a href="#">Get Loop</a>
+    <a href="#">Documentation</a>
+    <a href="#">FAQ</a>
+    <a href="#">Mailing List</a>
+  </nav>
+</header>
+<section id="main">
+  <blockquote>
+    loop is a little language for the jvm.
+    it takes advanced functional features and makes them easy and fun to use!
+  </blockquote>
+
+  <p>
+    see for yourself
+  </p>
+  <div class="spinner">
+    <ul class="topics">
+      <li>hello world</li>
+      <li>pattern matching</li>
+      <li>list comprehension</li>
+    </ul>
+    <div class="centerLoop">o</div>
+  </div>
+  <div class="code">
+<pre>main ->
+  print('hi')</pre>
+  </div>
+  <p>
+    here I am "adding" a method to a simple Java string
+  </p>
+  <div class="code">
+<pre>
+greet(name) ->
+  "hi, @{name}!"
+
+main ->
+  'Zaphod Beeblebrox'.greet()</pre>
+  </div>
+  <p>
+    other fun stuff
+  </p>
+  <div>
+    <ul class="features">
+      <li>modules</li>
+      <li>where scope</li>
+      <li>list comprehension</li>
+      <li>guards & pattern matching</li>
+    </ul>
+  </div>
+
+  <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
+    Some rights reserved.</section>
+</section>
+</body>
+</html>
