@@ -110,4 +110,29 @@ $(function() {
     if (event.which == LEFT || event.which == RIGHT)
       spin(event.which == RIGHT);
   });
+
+  // Hide the training wheels.
+  var pointer = $('#pointer');
+  pointer.animate({
+    rotate: '15deg',
+    translateY: '12px',
+    scale: 1.2
+  }, 0);
+  pointer.animate({
+    opacity: 1
+  }, 150, function() {
+    pointer.animate({
+      opacity: 0
+    }, 300, function() {
+      pointer.animate({
+        opacity: 1
+      }, 150, function() {
+        setTimeout(function() {
+          pointer.animate({
+            opacity: 0
+          }, 200);
+        }, 700);
+      });
+    })
+  });
 });

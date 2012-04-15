@@ -22,6 +22,26 @@ header nav > a {
   margin: 0 1px;
 }
 
+#pointer {
+  position: absolute;
+  left: 460px;
+  opacity: 0.2;
+
+  transform:  scale(1.2) translateY(12px) rotate(15deg);
+  -moz-transform:  scale(1.2) translateY(12px) rotate(15deg);
+  -o-transform:  scale(1.2) translateY(12px) rotate(15deg);
+  -webkit-transform:  scale(1.2) translateY(12px) rotate(15deg);
+}
+
+#pointer img {
+  float: left;
+  opacity: 0.5;
+  margin-right: 5px;
+}
+#pointer .caption {
+  margin-top: 10px;
+}
+
 #main {
   margin-left: 14px;
 }
