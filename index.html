@@ -5,7 +5,7 @@
 
   <link rel="stylesheet" href="main.css">
   <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="js/"></script>
+  <script type="text/javascript" src="js/jquery.transform-0.6.2.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body>
@@ -28,20 +28,103 @@
   <p>
     see for yourself
   </p>
-  <div class="spinner">
-    <ul class="topics">
-      <li>hello world</li>
-      <li>pattern matching</li>
-      <li>list comprehension</li>
-    </ul>
-    <div class="centerLoop">o</div>
+  <div class="code animated">
+    <a href="#" id="scriptTitle"><span>hello world</span> &rarr;</a>
+    <ol>
+      <li class="on" title="hello world">
+<pre>print('hi')</pre></li>
+      <li title="string interpolation">
+<pre>greet(name) ->
+  print("hi, @{name}!")</pre></li>
+      <li title="lists & sets">
+<pre>[1, 3, 3, 4]   # a list
+
+{3, 3, 4, 4}   # a set => {3, 4}</pre></li>
+      <li title="maps & trees">
+<pre># a hashmap
+{ 'name'    : 'Harry Potter',
+  'nemesis' : 'Voldemort' }
+
+# a tree => { 'l','o','o','p' }
+[ 'o' : 2,
+  'p' : 4 ,
+  'l' : 1 ,
+  'o' : 3 ].keySet()</pre></li>
+      <li title="symbols">
+<pre># a map, with symbols
+{ @name    : 'Harry Potter',
+  @nemesis : 'Voldemort' }
+
+# a set, similarly => false
+{ @sprinkles, @syrup, @cherry }.contains(@fudge)
+</pre></li>
+      <li title="list comprehension">
+<pre># transform list => [ 'STEVE', 'WOZ', 'RANDY' ]
+i.toUpperCase() for i in ['steve', 'woz', 'randy']
+
+
+# filter list => [ 'ipod', 'ipad', 'iphone' ]
+('i' + p) for p in ['mac',
+                    'pod',
+                    'pad',
+                    'phone'] if p.startsWith('p')
+</pre></li>
+      <li title="private scope">
+<pre># local variables are hidden.
+minutes(num) ->
+  "@{num * year} minutes in @{num} years"
+  where
+    hour: 60
+    day : 24 * hour
+    week: 7 * day
+    year: 52 * week
+</pre></li>
+      <li title="pattern matching">
+<pre># recursively reorders => [3, 14, 15, 268]
+reverse(ls) =>
+  []      : []
+  [x:xs]  : reverse(xs) + [x]
+
+reverse([268, 15, 14, 3])
+</pre></li>
+      <li title="guards">
+<pre># pattern matching + guards => 'qi'
+show(host) =>
+  ('Stephen ' : sur)  | sur == 'Fry'       : @qi
+                      | sur == 'Colbert'   : @report
+                      | else               : @boo
+
+
+show('Stephen Fry')
+</pre></li>
+      <li title="quicksort!">
+<pre># recursively sorts => [3, 14, 15, 268]
+quicksort(ls) =>
+  []      : []
+  [x:xs]  : (quicksort(i for i in xs if i > x) + [x] +
+             quicksort(i for i in xs if i < x))
+
+
+quicksort([15, 268, 3, 14])
+</pre></li>
+      <li title="call into java">
+<pre># instance method => 'mostly'
+'They mostly come at night, mostly'.substring(28)
+
+# static method => 133434532556
+`java.lang.System`.currentTimeMillis()
+
+# constructor => Sun 15 Apr 2012 14:22:50 UTC
+new java.util.Date()
+
+# property => 1 (getTime)
+new java.util.Date(1).time
+</pre></li>
+    </ol>
   </div>
-  <div class="code">
-<pre>main ->
-  print('hi')</pre>
-  </div>
+
   <p>
-    here I am "adding" a method to a simple Java string
+    here I am "adding" a method to a simple java string
   </p>
   <div class="code">
 <pre>
@@ -56,11 +139,12 @@ main ->
   </p>
   <div>
     <ul class="features">
-      <li>modules</li>
-      <li>where scope</li>
-      <li>list comprehension</li>
-      <li>guards & pattern matching</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">modules</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">dynamic typing</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">seamless java interop</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">sophisticated concurrency</li>
     </ul>
+    <button id="getStarted" class="button-blue">Get Started &raquo;</button>
   </div>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
