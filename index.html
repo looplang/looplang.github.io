@@ -75,7 +75,7 @@ i.toUpperCase() for i in ['steve', 'woz', 'randy']
                     'phone'] if p.startsWith('p')
 </pre></li>
       <li title="private scope">
-<pre># local variables are hidden.
+<pre># local variables, private to function
 minutes(num) ->
   "@{num * year} minutes in @{num} years"
   where
@@ -85,7 +85,7 @@ minutes(num) ->
     year: 52 * week
 </pre></li>
       <li title="pattern matching">
-<pre># recursively reorders => [3, 14, 15, 268]
+<pre># reverses a list => [3, 14, 15, 268]
 reverse(ls) =>
   []      : []
   [x:xs]  : reverse(xs) + [x]
@@ -95,15 +95,25 @@ reverse([268, 15, 14, 3])
       <li title="guards">
 <pre># pattern matching + guards => 'qi'
 show(host) =>
-  ('Stephen ' : sur)  | sur == 'Fry'       : @qi
-                      | sur == 'Colbert'   : @report
-                      | else               : @boo
+  ('Stephen ' : sur)  | sur == 'Fry'      : @qi
+                      | sur == 'Colbert'  : @report
+                      | else              : @boo
 
 
 show('Stephen Fry')
 </pre></li>
+      <li title="control flow">
+<pre># exceptions handled with pattern matching
+cleanup(file) except handler ->
+  file.open().truncate()
+
+
+handler(e) =>
+  FileNotFoundException  : 'no harm, no file'
+  IOException            : "failed: @{e.message}'
+</pre></li>
       <li title="quicksort!">
-<pre># recursively sorts => [3, 14, 15, 268]
+<pre># sorts a list => [3, 14, 15, 268]
 quicksort(ls) =>
   []      : []
   [x:xs]  : (quicksort(i for i in xs if i > x) + [x] +
@@ -111,6 +121,16 @@ quicksort(ls) =>
 
 
 quicksort([15, 268, 3, 14])
+</pre></li>
+      <li title="classes & objects">
+<pre># creates instance of Star with default age
+class Star ->
+  name
+  mass
+  age  : '4 billion years'
+
+new Star(name: 'Proxima Centauri'
+         mass: 0.123)
 </pre></li>
       <li title="call into java">
 <pre># instance method => 'mostly'
@@ -145,10 +165,10 @@ main ->
   <div>
     <ul class="features">
       <li><img src="images/arrow_right.png" alt="bullet arrow">modules</li>
-      <li><img src="images/arrow_right.png" alt="bullet arrow">dynamic typing</li>
-      <li><img src="images/arrow_right.png" alt="bullet arrow">seamless java interop</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">closures</li>
       <li><img src="images/arrow_right.png" alt="bullet arrow">tail call optimization</li>
-      <li><img src="images/arrow_right.png" alt="bullet arrow">sophisticated concurrency</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">built-in concurrency</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">object pattern matching</li>
     </ul>
     <button id="getStarted" class="button-blue">Get Started &raquo;</button>
   </div>

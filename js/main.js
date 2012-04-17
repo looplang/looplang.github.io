@@ -3,7 +3,7 @@
  */
 
 var OPERATORS = ['->', '<-', '=>', 'and', 'or', 'not', 'class', 'if', 'then', 'else',
-  'where', 'for', 'in', '==', '>=', '<=', 'true', 'false'];
+  'where', 'for', 'in', '==', '>=', '<=', 'true', 'false', 'except', 'immutable'];
 
 (function() {
   var ops = OPERATORS;
@@ -130,7 +130,9 @@ $(function() {
         setTimeout(function() {
           pointer.animate({
             opacity: 0
-          }, 200);
+          }, 200, function() {
+            pointer.remove();
+          });
         }, 700);
       });
     })
