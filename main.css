@@ -51,7 +51,7 @@ header nav > a {
 }
 
 #main p {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 #main blockquote {
@@ -71,7 +71,7 @@ header nav > a {
   display: block;
   float: right;
   margin-top: -34px;
-  color: #cfcfcf;
+  color: #aaa;
   text-decoration: none;
   font-weight: lighter;
 }
