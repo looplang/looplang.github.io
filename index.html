@@ -110,7 +110,7 @@ cleanup(file) except handler ->
 
 handler(e) =>
   FileNotFoundException  : "no harm, no file"
-  IOException            : "failed: @{e.message}'
+  IOException            : "failed: @{e.message}"
 </pre></li>
       <li title="quicksort!">
 <pre># sorts a list => [3, 14, 15, 268]
@@ -158,6 +158,17 @@ greet(name) ->
 
 main ->
   'Zaphod Beeblebrox'.greet()</pre>
+  </div>
+  <p>
+    loop behaves well with java exceptions
+  </p>
+  <div class="code">
+<pre>java.lang.RuntimeException: i'm complaining
+    at prelude.raise(prelude.loop:9)
+    at myapp.func3(my_app.loop:3)
+    at myapp.func2(my_app.loop:6)
+    at myapp.func1(my_app.loop:9)
+    at myapp.main(my_app.loop:13)</pre>
   </div>
   <p>
     other fun stuff
