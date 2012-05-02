@@ -127,7 +127,6 @@ header nav > a {
   color: rgb(96, 156, 255);
   /*pale-blue */
   /*color: rgb(245, 70, 0);*/
-  opacity: 0.93;
 }
 
 .code pre .typeLiteral {
@@ -144,7 +143,7 @@ header nav > a {
 .code pre .symbol {
   /*color: rgb(225, 70, 0);*/
   color: rgb(140, 13, 199);
-  opacity: 0.9;
+  /*opacity: 0.9;*/
   /*color: rgb(96, 156, 255);*/
   /*pale-blue */
 }
@@ -156,10 +155,10 @@ header nav > a {
 }
 
 .code ol > li.on {
-  display: block;
+  display: block !important;
 }
 .code ol > li {
-  display: none;
+  /*display: none;*/
 }
 
 #copyright {

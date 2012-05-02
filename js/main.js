@@ -22,6 +22,9 @@ function escape(token) {
 }
 
 $(function() {
+  // First hide all the examples, to put them into our slideshow.
+  $('div.code ol > li').css('display', 'none');
+
   $('div.code pre').each(function() {
     var code = $(this).text();
 

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>About loop - a programming language</title>
+
+  <link rel="stylesheet" href="../main.css">
+  <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+  <!--<script type="text/javascript" src="js/jquery.transform-0.6.2.min.js"></script>-->
+  <script type="text/javascript" src="../js/main.js"></script>
+</head>
+<body>
+<header>
+  <h1>loop</h1>
+  <nav>
+    <a href="/about">About</a>
+    <a href="/#get-loop">Get Loop</a>
+    <a href="/doc">Documentation</a>
+    <a>FAQ</a>
+    <a href="https://groups.google.com/group/looplang">Mailing List</a>
+  </nav>
+</header>
+<section id="main">
+  <blockquote>
+    what is loop's type system like? (strong, static, etc.)
+  </blockquote>
+  <p>
+    loop is dynamic, strong and duck typed. in other words,
+    it enforces strong type safety over expressions and functions, and these are resolved
+    at runtime.
+  </p>
+  <blockquote>
+    is loop also value-typed?
+  </blockquote>
+  <p>
+    yes. objects are equal if their structure and data are "deeply" equal.
+  </p>
+
+  <blockquote>
+    is loop capable of multi-threading/concurrency?
+  </blockquote>
+  <p>
+    yes, using a combination of features called <i>message-driven
+    channels</i> and <i>software transactional memory</i>.
+    in fact much of loop is designed around high performance and concurrency.
+  </p>
+
+  <blockquote>
+    does loop optimize tail calls (tco)?
+  </blockquote>
+  <p>
+    yes, but currently loop only optimizes <i>recursive</i> tail calls.
+  </p>
+  <p>
+    <i>
+      Read more in the <a href="/doc">documentation</a> or ask on the
+      <a href="http://groups.google.com/group/looplang">mailing list</a>.
+    </i>
+  </p>
+
+  <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
+    Some rights reserved.</section>
+</section>
+</body>
+</html>
