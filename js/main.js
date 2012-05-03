@@ -32,7 +32,7 @@ $(function() {
     // Process into code markup...
     var tokens = code.split(/([., \r\n\(\){}\[\]]+)/);
 
-    var inString = false, inComment = false;
+    var inString = false, inBold = false, inComment = false;
     for (var i = 0; i < tokens.length; i++) {
       var token = tokens[i];
 
@@ -47,13 +47,20 @@ $(function() {
         continue;
       }
 
-      if (!inComment && token.match(/^["'`]/)) {
+      if (!inComment && token.match(/^[~"'`]/)) {
         inString = true;
-        token = '<span class="string">' + token
+        inBold = token.match(/^[~]/);
+        token = token.replace(/^[~]/, '');
+        if (inBold)
+          token = '<span class="highlight">' + token;
+        else
+          token = '<span class="string">' + token;
       }
 
-      if (!inComment && token.match(/["'`]$/)) {
+      if (!inComment && token.match(/["'`~]$/)) {
         inString = false;
+        inBold = false;
+        token = token.replace(/[~]$/, '');
         token += '</span>';
       } else if (!inString && trimmedToken == '#') {
         inComment = true;

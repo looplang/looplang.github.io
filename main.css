@@ -112,6 +112,10 @@ header nav > a {
   padding: 8px;
 }
 
+.code pre .highlight {
+  font-weight: bold;
+}
+
 .code pre .string {
   /*color: rgb(87, 157, 29);  *//*green */
   color: #555;

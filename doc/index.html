@@ -23,148 +23,174 @@
     manual
   </blockquote>
 
-  <p>
-    see for yourself
-  </p>
-  <div class="code animated">
-    <ol>
-      <li class="on" title="hello world">
-<pre>print('hi')</pre></li>
-      <li title="string interpolation">
-<pre>greet(name) ->
-  print("hi, @{name}!")</pre></li>
-      <li title="lists & sets">
-<pre>[1, 3, 3, 4]   # a list
-
-{3, 3, 4, 4}   # a set => {3, 4}</pre></li>
-      <li title="maps & trees">
-<pre># a hashmap
-{ 'name'    : 'Harry Potter',
-  'nemesis' : 'Voldemort' }
-
-# a tree => { 'l','o','o','p' }
-[ 'o' : 2,
-  'p' : 4 ,
-  'l' : 1 ,
-  'o' : 3 ].keySet()</pre></li>
-      <li title="symbols">
-<pre># a map, with symbols
-{ @name    : 'Harry Potter',
-  @nemesis : 'Voldemort' }
-
-# a set, similarly => false
-{ @sprinkles, @syrup, @cherry }.contains(@fudge)
-</pre></li>
-      <li title="list comprehension">
-<pre># transform list => [ 'STEVE', 'WOZ', 'RANDY' ]
-i.toUpperCase() for i in ['steve', 'woz', 'randy']
-
-
-# filter list => [ 'ipod', 'ipad', 'iphone' ]
-('i' + p) for p in ['mac',
-                    'pod',
-                    'pad',
-                    'phone'] if p.startsWith('p')
-</pre></li>
-      <li title="private scope">
-<pre># local variables, private to function
-minutes(num) ->
-  "@{num * year} minutes in @{num} years"
-  where
-    hour: 60
-    day : 24 * hour
-    week: 7 * day
-    year: 52 * week
-</pre></li>
-      <li title="pattern matching">
-<pre># reverses a list => [3, 14, 15, 268]
-reverse(ls) =>
-  []      : []
-  [x:xs]  : reverse(xs) + [x]
-
-reverse([268, 15, 14, 3])
-</pre></li>
-      <li title="guards">
-<pre># pattern matching + guards => 'qi'
-show(host) =>
-  ('Stephen ' : sur)  | sur == 'Fry'      : @qi
-                      | sur == 'Colbert'  : @report
-                      | else              : @boo
-
-
-show('Stephen Fry')
-</pre></li>
-      <li title="control flow">
-<pre># exceptions handled with pattern matching
-cleanup(file) except handler ->
-  file.open().truncate()
-
-
-handler(e) =>
-  FileNotFoundException  : "no harm, no file"
-  IOException            : "failed: @{e.message}"
-</pre></li>
-      <li title="quicksort!">
-<pre># sorts a list => [3, 14, 15, 268]
-quicksort(ls) =>
-  []      : []
-  [x:xs]  : (quicksort(i for i in xs if i > x) + [x] +
-             quicksort(i for i in xs if i < x))
-
-
-quicksort([15, 268, 3, 14])
-</pre></li>
-      <li title="classes & objects">
-<pre># creates instance of Star with default age
-class Star ->
-  name
-  mass
-  age  : '4 billion years'
-
-new Star(name: 'Proxima Centauri'
-         mass: 0.123)
-</pre></li>
-      <li title="call into java">
-<pre># instance method => 'mostly'
-'They mostly come at night, mostly'.substring(28)
-
-# static method => 133434532556
-`java.lang.System`.currentTimeMillis()
-
-# constructor => Sun 15 Apr 2012 14:22:50 UTC
-new java.util.Date()
-
-# property => 1 (getTime)
-new java.util.Date(1).time
-</pre></li>
-    </ol>
+  <div>
+    <ul class="outline">
+      <li><a name="#introduction">Introduction</a>
+        <ul>
+          <li><a name="#get-loop">Getting started</a></li>
+          <li><a name="#first-loop">My first loop</a></li>
+          <li><a name="#evaluation">Evaluation</a></li>
+          <li><a name="#prog-structure">Program structure</a></li>
+        </ul>
+      </li>
+      <li><a name="#data-structures">Data structures</a>
+        <ul>
+          <li><a name="#lists">Lists & sets</a></li>
+          <li><a name="#maps">Maps</a></li>
+          <li><a name="#trees">Trees</a></li>
+        </ul>
+      </li>
+      <li><a name="#basic-exprs">Basic expressions</a>
+        <ul>
+          <li><a name="#strings">Strings</a></li>
+          <li><a name="#numbers">Numbers</a></li>
+          <li><a name="#operators">Operators</a></li>
+          <li><a name="#new-objects">Navigating Objects</a></li>
+          <li><a name="#if-then-else">If/Then/Else</a></li>
+          <li><a name="#list-comp">List comprehension</a></li>
+          <li><a name="#list-filter">List filtering</a></li>
+          <li><a name="#list-slices">List slices</a></li>
+          <li><a name="#null-safety">Null-safety</a></li>
+        </ul>
+      </li>
+      <li><a name="#functions">Functions</a>
+        <ul>
+          <li><a name="#simple-funcs">Simple functions</a></li>
+          <li><a name="#recursion">Recursion</a></li>
+          <li><a name="#where-block">Local scope</a></li>
+          <li><a name="#closures">Closures</a></li>
+          <li><a name="#call-as-method">Call as method</a></li>
+        </ul>
+      </li>
+      <li><a name="#pattern-funcs">Pattern matching functions</a>
+        <ul>
+          <li><a name="#pattern-literals">Literals</a></li>
+          <li><a name="#pattern-lists">Lists</a></li>
+          <li><a name="#pattern-strings">Strings & Regexes</a></li>
+          <li><a name="#pattern-objects">Objects</a></li>
+          <li><a name="#pattern-guards">Guards</a></li>
+          <li><a name="#pattern-examples">Examples</a></li>
+        </ul>
+      </li>
+      <li><a name="#cflow">Control flow</a>
+        <ul>
+          <li><a name="#exceptions">Exceptions</a></li>
+          <li><a name="#except-handling">Handler functions</a></li>
+        </ul>
+      </li>
+      <li><a name="#classes-objects">Classes & objects</a>
+        <ul>
+          <li><a name="#objects">Defaults</a></li>
+          <li><a name="#classes">Constructors</a></li>
+          <li><a name="#immutability">Immutability</a></li>
+          <li><a name="#manipulating-objects">Manipulating objects</a></li>
+          <li><a name="#duck-typing">Duck typing</a></li>
+        </ul>
+      </li>
+      <li><a name="#modules">Modules & Import</a>
+        <ul>
+          <li><a name="#imports">Importing</a></li>
+          <li><a name="#require-as">Import collisions</a></li>
+          <li><a name="#basic-mods">First module</a></li>
+          <li><a name="#core-libs">Bundled modules</a></li>
+          <li><a name="#hierarchical-mods">Hierarchical modules</a></li>
+        </ul>
+      </li>
+      <li><a name="#java-interop">Java Interop</a>
+        <ul>
+          <li><a name="#java-instance">Calling instance methods</a></li>
+          <li><a name="#java-static">Calling static methods</a></li>
+          <li><a name="#java-props">Getters & Setters</a></li>
+          <li><a name="#java-types">Type references</a></li>
+        </ul>
+      </li>
+      <li><a name="#concurrency">Concurrency</a>
+        <ul>
+          <li><a name="#message-passing">Channels & Message Passing</a></li>
+          <li><a name="#serial-channels">Serialized channels</a></li>
+          <li><a name="#conc-channels">Concurrent channels</a></li>
+          <li><a name="#channel-memory">Channel memory</a></li>
+          <li><a name="#stm">Shared memory & transactions</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 
+  <h4>Getting started</h4>
   <p>
-    here I am "adding" a method to a simple java string
+    you will need java 1.6 or higher already installed. check if you have it by running:
   </p>
   <div class="code">
-<pre>
-greet(name) ->
-  "hi, @{name}!"
-
-main ->
-  'Zaphod Beeblebrox'.greet()</pre>
+<pre>$ ~java -version~
+java version "1.6.0_31"
+Java(TM) SE Runtime Environment
+Java HotSpot(TM) 64-Bit Server VM</pre>
   </div>
+
   <p>
-    loop behaves well with java exceptions
+    download and unzip the <a href="#">loop distribution</a>. from the directory you unzipped
+    it into, run:
   </p>
   <div class="code">
-<pre>java.lang.RuntimeException: i'm complaining
-    at prelude.raise(prelude.loop:9)
-    at myapp.func3(my_app.loop:3)
-    at myapp.func2(my_app.loop:6)
-    at myapp.func1(my_app.loop:9)
-    at myapp.main(my_app.loop:13)</pre>
+<pre>$ ~./loop~</pre>
   </div>
   <p>
-    other fun stuff
+    this will bring up the loop shell, from where you can execute simple loop expressions
+    and functions
   </p>
+  <div class="code">
+<pre>loOp (http://looplang.org)
+     by Dhanji R. Prasanna
+
+>> ~1 + 2 + 4~
+7
+>> ~alert('hi there')~
+>> ~:help~
+</pre>
+  </div>
+
+  <h4>My first loop</h4>
+  <p>
+    like all other decent things, loop programs are stored in files. you can recognize
+    a loop program file by its extension <i>.loop</i>.
+    they can be executed either from the shell (using :run) or directly from the command line:
+  </p>
+  <div class="code">
+<pre>$ ~./loop myfirst.loop~
+hello there
+</pre>
+  </div>
+
+  <p>
+    this snippet above looks for a program file called <i>myfirst.loop</i> and executes it.
+    you can create and save this file in any text editor, it contains nothing more than the following:
+  </p>
+  <div class="code">
+<pre>print('hello there')</pre>
+  </div>
+  <p>
+    give this a try now. you can print other things too:
+  </p>
+
+  <div class="code">
+    <pre>print(1 + 2)
+print(5 * 50 / 44)
+print(new java.util.Date())</pre>
+  </div>
+  <p>
+    these are called 'free expressions' and they may appear anywhere inside a loop function or
+    program. specifically, the function print is being called with different values.
+
+    as you will learn soon, everything in loop is designated in terms of functions
+    and values.
+  </p>
+
+  <div class="code">
+    <pre>print(1 + 2)
+print(5 * 50 / 44)
+print(new java.util.Date())</pre>
+  </div>
+
   <div>
     <ul class="features">
       <li><img src="../images/arrow_right.png" alt="bullet arrow">closures</li>
