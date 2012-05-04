@@ -120,6 +120,11 @@ header nav > a {
   font-weight: bold;
 }
 
+.code pre .error {
+  font-weight: bold;
+  color: red;
+}
+
 .code pre .string {
   /*color: rgb(87, 157, 29);  *//*green */
   color: #555;

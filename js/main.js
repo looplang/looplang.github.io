@@ -3,7 +3,8 @@
  */
 
 var OPERATORS = ['->', '<-', '=>', 'and', 'or', 'not', 'class', 'if', 'then', 'else',
-  'where', 'for', 'in', '==', '>=', '<=', 'true', 'false', 'except', 'immutable'];
+  'where', 'for', 'in', '==', '>=', '<=', 'true', 'false', 'except', 'immutable', 'require',
+  'module'];
 
 (function() {
   var ops = OPERATORS;
@@ -32,7 +33,7 @@ $(function() {
     // Process into code markup...
     var tokens = code.split(/([., \r\n\(\){}\[\]]+)/);
 
-    var inString = false, inBold = false, inComment = false;
+    var inString = false, inBold = false, inError = false, inComment = false;
     for (var i = 0; i < tokens.length; i++) {
       var token = tokens[i];
 
@@ -47,20 +48,35 @@ $(function() {
         continue;
       }
 
-      if (!inComment && token.match(/^[~"'`]/)) {
+      if (!inComment && token.match(/^[\\~"'`]/) && !inBold && !inError) {
         inString = true;
         inBold = token.match(/^[~]/);
-        token = token.replace(/^[~]/, '');
-        if (inBold)
+        inError = token.match(/^[\\]/);
+        token = token.replace(/^[\\~]/, '');
+        if (inBold) {
           token = '<span class="highlight">' + token;
-        else
+          if (token.replace(/[\r\n]/, '').match(/[~]$/)) {
+           token = token.replace(/[~]$/, '') + '</span>';
+            inString = false;
+            inBold = false;
+          }
+        } else if (inError) {
+          token = '<span class="error">' + token;
+          if (trimmedToken != '' && token.match(/[\\]$/)) {
+            token = token.replace(/[\\]$/, '') + '</span>';
+            inString = false;
+            inError = false;
+          }
+        } else {
           token = '<span class="string">' + token;
+        }
       }
 
-      if (!inComment && token.match(/["'`~]$/)) {
+      if (!inComment && token.match(/["'`~\\]$/)) {
         inString = false;
         inBold = false;
-        token = token.replace(/[~]$/, '');
+        inError = false;
+        token = token.replace(/[~\\]$/, '');
         token += '</span>';
       } else if (!inString && trimmedToken == '#') {
         inComment = true;

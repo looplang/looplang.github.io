@@ -199,25 +199,435 @@ hello there
   </div>
 
   <p>
-    this snippet above looks for a program file called <i>myfirst.loop</i> and executes it.
-    you can create and save this file in any text editor, it contains nothing more than the following:
+    while free expressions in a file are useful for writing quick scripts, if you write a larger
+    application (consisting of many .loop files) you will want to define a clear entry point for
+    your app. Loop uses the C convention of using a function called <code>main</code>, which is
+    called by the runtime if present:
   </p>
   <div class="code">
-<pre>print('hello there')</pre>
+<pre>main ->
+  print('hello there')</pre>
   </div>
   <p>
-    give this a try now. you can print other things too:
+    give this a try now. you should see the same result. this is the first function we've seen. all
+    functions are declared with a name followed by a <code>-></code> arrow. any expressions that
+    appear below, belong to the function and will execute when the function is called.
+    <code>main</code> can optionally take arguments:
+  </p>
+
+  <div class="code">
+<pre>main(args) ->
+  print(args)</pre>
+  </div>
+  <p>
+    which are passed in via the command line:
+  </p>
+  <div class="code">
+<pre>$ ~./loop echo.loop ahoyhoy~
+[ahoyhoy]
+</pre>
+  </div>
+  <p>
+    note that this prints a list of arguments, denoted by the brackets - <code>[]</code>. we'll
+    see more about lists and functions in the following sections.
+  </p>
+
+  <h3>Program structure</h3>
+  <p>
+    loop files are organized into a formal structure which is enforced by the program parser. it
+    is fairly straightforward:
+  </p>
+  <div class="code">
+<pre>
+module declaration
+
+import declarations
+
+functions & type definitions
+
+free expressions
+</pre>
+  </div>
+  <p>
+    here's an example of a loop program
+  </p>
+
+  <div class="code">
+<pre>
+module mymodule
+
+require other.mod
+require yet.another
+
+class Pair ->
+  left: 0
+  right: 0
+
+main ->
+  new Pair(1, 2)   # comments may appear anywhere
+
+
+# free expressions must appear last
+print('mymodule is go!')
+</pre>
+  </div>
+
+  <p>
+    a module declaration appears at the top (usually this is the name of the loop file without the
+    .loop extension), followed by <code>require</code> statements that denote imports of other
+    modules or java types.
+    loop type and function definitions come next and may be mixed,
+    but free expressions are always last.
+  </p>
+  <p>
+    note: free expressions in a module are evaluated any time a module is imported and always
+    run before <code>main</code>, which, only executes if you specifically run that file. if
+    you are familiar with static initializers in java, that's what free expressions are. you are
+    encouraged to use main when writing anything more than trivial programs.
+  </p>
+  <h2>Data structures</h2>
+  <p>
+    in addition to any available java data structures and types, there are a few built-in types
+    in loop.
+  </p>
+
+  <h3>Strings</h3>
+  <p>
+    strings in loop are java strings (unicode, utf-16 <code>java.lang.String</code> objects).
+    however there are many special loop-specific extensions for working with them. A normal string
+    as we've seen before is enclosed in single quotes:
+  </p>
+  <div class="code">
+<pre>print('this is a string of characters')</pre>
+  </div>
+
+  <p>
+    double quoted strings are also equivalent, but they may contain expressions that are expanded
+    at runtime. for example:
+  </p>
+  <div class="code">
+    <pre>greet(name) ->
+  print("hello, @{name}")
+
+greet('Dhanji')</pre>
+  </div>
+
+  <p>
+    running this program prints <code>hello, Dhanji</code> to the console. any loop expression
+    can be embedded inside the <i>orb</i> tags - <code>@{}</code>.
+  </p>
+  <div class="code">
+    <pre>"26 * 34 is @{26 * 34}"
+
+=> "26 * 34 is 884"</pre>
+  </div>
+  <p>
+    if you want to print the orb tags literally, fall back to single quoted strings
+  </p>
+  <div class="code">
+    <pre>'this is inside an @{orb tag}'
+
+=> "this is inside an @{orb tag}"</pre>
+  </div>
+
+  <h3>Numbers</h3>
+  <p>
+    loop has built-in support for most common numeric types. the following java types are
+    supported natively:
   </p>
   <div>
     <ul class="features">
-      <li><img src="../images/arrow_right.png" alt="bullet arrow">closures</li>
-      <li><img src="../images/arrow_right.png" alt="bullet arrow">null-safety</li>
-      <li><img src="../images/arrow_right.png" alt="bullet arrow">tail call optimization</li>
-      <li><img src="../images/arrow_right.png" alt="bullet arrow">built-in concurrency</li>
-      <li><img src="../images/arrow_right.png" alt="bullet arrow">object pattern matching</li>
+      <li><img src="../images/arrow_right.png" alt="bullet arrow">Integer (32-bit)</li>
+      <li><img src="../images/arrow_right.png" alt="bullet arrow">Long (64-bit)</li>
+      <li><img src="../images/arrow_right.png" alt="bullet arrow">Double (64-bit)</li>
+      <li><img src="../images/arrow_right.png" alt="bullet arrow">BigInteger (arbitrary)</li>
+      <li><img src="../images/arrow_right.png" alt="bullet arrow">BigDecimal (arbitrary)</li>
     </ul>
-    <button id="getStarted" class="button-blue">Get Started &raquo;</button>
   </div>
+  <p>
+    loop has no support for floats, shorts or bytes, however these may be manipulated using java
+    primitive wrapper types if needed. by default, any integer appearing in a loop program is
+    treated as a 32-bit <code>Integer</code>
+  </p>
+  <div class="code">
+    <pre>print(23.getClass())
+
+=> java.lang.Integer</pre>
+  </div>
+  <p>
+    longs, like in java, are specified by suffixing 'L' to a number. note that unlike java this
+    must be an uppercase L.
+  </p>
+  <div class="code">
+    <pre>print(23L.getClass())
+
+=> java.lang.Long</pre>
+  </div>
+  <p>
+    a special syntax is also available for arbitrary precision numbers (numbers too large or too
+    precise to fit into 64 bits)
+  </p>
+  <div class="code">
+    <pre>print(@23129038102938102938102938)
+print(@2.3129038102938102938102938)
+
+=> 23129038102938102938102938
+=> 2.3129038102938102938102938</pre>
+  </div>
+  <p>
+    you can add, subtract, multiply, divide, modulus or compare any two values if they are of the
+    same numeric type:
+  </p>
+  <div class="code">
+    <pre>3 + 4
+=> 7
+
+46L / 2L
+=> 23
+
+@2.0 > @1.9999999999999999
+=> true</pre>
+  </div>
+  <p>
+    however, unlike java loop forbids mixing numeric types in expressions. you must convert
+    all values to the same, compatible type before computing with them.
+  </p>
+  <div class="code">
+    <pre>\3L + 3\
+
+=> \#error\
+</pre>
+  </div>
+
+  <p>
+    this is done to prevent
+    surprising behavior and loss of information when converting between types of different
+    precision.
+    you can convert any number to the largest precision type easily
+  </p>
+  <div class="code">
+    <pre>@3 + 4.embiggen()
+=> 7
+
+@3.0 + 4.0.embiggen()
+=> 7.0</pre>
+  </div>
+
+  <h3>Operators</h3>
+  <p>
+    operators in loop are symbols that combine two values to produce a resultant value, for example
+    the <code>+</code> (plus) operator adds two numbers and produces their sum. operators need not
+    necessarily produce the same type of value as the values they combine. for instance, the
+    <code>&gt;</code> (greater-than) operator takes two numbers and returns <code>true</code> if the
+    first is greater than the second.
+  </p>
+  <p>
+    the following operators are provided with loop
+  </p>
+  <div class="code">
+    <pre>+, -, /, *, %, >, <, >=, <=, ==, not, and, or</pre>
+  </div>
+  <p>
+    some of these operators work on multiple data types. for instance, the + operator can be used
+    to <i>concatenate</i> strings together
+  </p>
+  <div class="code">
+    <pre>'1' + '2'
+
+=> '12'</pre>
+  </div>
+  <p>
+    in fact, as long as the string appears on the left, any object may be concatenated with it
+  </p>
+  <div class="code">
+    <pre>'1' + @2
+
+=> '12'</pre></div>
+  <p>
+    note that no loop operator ever mutates its operands. it simply reads and
+    combines them to produce a third, resultant value. (the assign operator is an exception,
+    but we'll deal with that later).
+  </p>
+
+  <h3>Lists</h3>
+
+  <p>
+    lists are an essential component of programming in loop, as as such they are supported
+    natively in syntax. all loop lists are perfectly compatible with <code>java.util.List</code>
+    and like <code>String</code>, come with some nifty, loop-specific extensions.
+  </p>
+  <p>
+    lists may contain any (or many) type of object. here is a simple list of integers
+  </p>
+  <div class="code">
+    <pre>[1, 2, 3, 4, 5]</pre></div>
+  <p>
+    lists are zero-based and can be indexed using familiar brackets syntax - <code>[]</code>
+  </p>
+  <div class="code">
+    <pre>third(ls) ->
+  ~ls[2]~
+
+third([1, 2, 3])
+
+=> 3</pre></div>
+  <p>
+    you can also use a similar syntax to slice portions of lists
+  </p>
+  <div class="code">
+    <pre>pick(ls) ->
+  ~ls[0..2]~
+
+pick([1, 2, 3, 4, 5, 6, 7])
+
+=> [1, 2, 3]</pre></div>
+  <p>
+    leaving out a lower or upper bound slices the list from or to the given index
+  </p>
+  <div class="code">
+    <pre>pick(ls) ->
+  ~ls[2..] + ls[..1]~
+
+pick([1, 2, 3, 4])
+
+=> [3, 4, 2, 1]</pre></div>
+  <p>
+    note that i used the <code>+</code> operator here to add the two sub-lists together. it is
+    also sometimes useful to generate lists without typing out each entry. you can use the list
+    <code>range</code> syntax to accomplish this:
+  </p>
+  <div class="code">
+    <pre>pick(ls) ->
+  ls[0..2]
+
+pick(~[1..7]~)    # generate a list of 1-7
+
+=> [1, 2, 3]</pre></div>
+  <p>
+    the range syntax is very similar to the slice syntax except that slices must on some existing
+    list (in the above cases, a list variable, <code>ls</code>). so keep that in mind when reading
+    loop code
+  </p>
+
+  <h3>Sets</h3>
+
+  <p>
+    similarly, loop provides a natural and familiar syntax for working with sets. a set is similar
+    to a list except that it is a collection of unique items and that they are present in no
+    particular order
+  </p>
+  <div class="code">
+    <pre>~{1, 1, 2, 2, 3, 3}~
+
+=> {1, 2, 3}</pre></div>
+  <p>
+    loop sets are fully compatible with <code>java.util.Set</code> classes.
+  </p>
+
+  <h3>Maps</h3>
+  <p>
+    maps are an extremely useful data structure in loop. they are implementations compliant with
+    <code>java.util.Map</code> and are created using a familar json-like syntax:
+  </p>
+  <div class="code">
+    <pre>{ 'name' : 'Tyrion',
+  'house' : 'Lannister' }
+
+=> { name=Tyrion, house=Lannister }</pre></div>
+  <p>
+    maps may also contain any type or many types as both keys and values
+  </p>
+  <div class="code">
+    <pre>{ 1 : 'one',
+  2 : 'two' }
+
+=> { 1=one, 2=two }</pre></div>
+  <p>
+    read values out of maps using simple dot syntax, like in json
+  </p>
+  <div class="code">
+    <pre>{ 'name' : 'Tyrion',
+  'house' : 'Lannister' }.~house~ + ' pays his debts'
+
+=> "Lannister pays his debts"</pre></div>
+  <p>
+    for keys not known until runtime, you can use the bracket syntax, similar to list indexing
+  </p>
+  <div class="code">
+    <pre>read(map, key) ->
+  ~map[key]~
+
+read({ 'name' : 'Tyrion'}, 'name')
+
+=> "Tyrion"</pre></div>
+  <p>
+    you can also write to maps, similarly
+  </p>
+  <div class="code">
+    <pre>starkify(map) ->
+  ~map.house: 'Stark'~
+
+starkify({ 'name' : 'Tyrion'})
+
+=> { name=Tyrion, house=Stark }</pre></div>
+  <p>
+    this is the first time we've seen the assign operator <code>':'</code> (interchangeable with
+    <code>'='</code>). we'll encounter it a lot more further on but for now, read it as assigning
+    the value to the right of the <code>:</code> to the slot represented by its left.
+  </p>
+
+  <h3>Trees</h3>
+  <p>
+    like sets are to lists, loop provides a simple syntactic abstraction to represent binary trees.
+    a binary tree in loop is also compatible with <code>java.util.Map</code> and is used to
+    associate keys to values. its keys are, however, kept in natural sorted order which may be
+    realized during iteration. we'll see more about this when looking at list comprehensions.
+  </p>
+  <div class="code">
+    <pre>['Sansa': 'Stark',
+'Catelyn': 'Stark',
+'Brandon': 'Stark',
+'Arya': 'Stark',
+'Robb': 'Stark',
+'Eddard': 'Stark'].keySet()
+
+=> [ Arya, Brandon, Catelyn, Eddard, Robb, Sansa ]</pre></div>
+  <p>
+    note that the keys went in in an arbitrary order and when printed produced a sorted result
+    according to alphabetical order.
+  </p>
+
+  <h3>Symbols</h3>
+  <p>
+    strings are extremely useful to represent data, however they are somewhat cumbersome to
+    represent particular kinds--map keys for example. like ruby, loop ships with support for
+    <i>interned</i> strings called symbols. they are more concise to write and perform marginally
+    better at runtime
+  </p>
+  <div class="code">
+    <pre>{ @name: 'Tyrion',
+  @house: 'Lannister' }</pre></div>
+  <p>
+    in loop symbols are prefixed with the <code>@</code> character and unlike ruby are
+    completely interchangeable with strings
+  </p>
+  <div class="code">
+    <pre>@popsicle == 'pop' + 'sicle'
+
+=> true</pre></div>
+
+  <p>
+    all these data types and structures we've learned about thus far can be combined or nested
+    to create a rich ontology to suit your needs
+  </p>
+  <div class="code">
+    <pre>{ @houses: { 'Lannister', 'Stark', 'Targaryen' },
+  @protagonists: { 'Jon', 'Dany', 'Tyrion' }
+  @locations: [ 'Winterfell'   : 'Stark',
+                'Targaryen'    : 'Dragonstone',
+                'Casterly Rock : 'Lannister' ]}</pre></div>
+
+  <h2>Advanced expressions</h2>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
     Some rights reserved.</section>
