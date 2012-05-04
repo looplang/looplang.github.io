@@ -46,6 +46,10 @@ header nav > a {
   margin-left: 14px;
 }
 
+#main h2, h3, h4 {
+  padding-top: 12px;
+}
+
 #main p, blockquote, div {
   width: 400px;
 }

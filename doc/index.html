@@ -116,7 +116,8 @@
     </ul>
   </div>
 
-  <h4>Getting started</h4>
+  <h2>Introduction</h2>
+  <h3>Getting started</h3>
   <p>
     you will need java 1.6 or higher already installed. check if you have it by running:
   </p>
@@ -149,7 +150,7 @@ Java HotSpot(TM) 64-Bit Server VM</pre>
 </pre>
   </div>
 
-  <h4>My first loop</h4>
+  <h3>My first loop</h3>
   <p>
     like all other decent things, loop programs are stored in files. you can recognize
     a loop program file by its extension <i>.loop</i>.
@@ -185,12 +186,28 @@ print(new java.util.Date())</pre>
     and values.
   </p>
 
+
+  <h3>Evaluation</h3>
+  <p>
+    so far you have seen how small computations and function calls work in loop. these are known
+    as <i>expressions</i>, and form the basic building blocks of all programs.
+  </p>
   <div class="code">
-    <pre>print(1 + 2)
-print(5 * 50 / 44)
-print(new java.util.Date())</pre>
+<pre>$ ~./loop myfirst.loop~
+hello there
+</pre>
   </div>
 
+  <p>
+    this snippet above looks for a program file called <i>myfirst.loop</i> and executes it.
+    you can create and save this file in any text editor, it contains nothing more than the following:
+  </p>
+  <div class="code">
+<pre>print('hello there')</pre>
+  </div>
+  <p>
+    give this a try now. you can print other things too:
+  </p>
   <div>
     <ul class="features">
       <li><img src="../images/arrow_right.png" alt="bullet arrow">closures</li>
