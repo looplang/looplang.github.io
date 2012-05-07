@@ -648,6 +648,54 @@ starkify({ 'name' : 'Tyrion'})
                 'Targaryen'    : 'Dragonstone',
                 'Casterly Rock : 'Lannister' ]}</pre></div>
 
+  <h3>String manipulation</h3>
+
+  <p>
+    like lists, loop provides a number of special syntax extensions for working with strings.
+    these are just normal java strings. let's look at a few: indexing works with strings exactly
+    as it does with lists
+  </p>
+
+  <div class="code">
+    <pre>'hello'[2]
+
+=> 'l'</pre></div>
+
+  <p>
+    note that the object returned is also a string (rather than a <code>java.lang.Character</code>).
+    and like lists you can also slice strings
+  </p>
+  <div class="code">
+    <pre>str: 'hello'
+print(str[2..4])
+print(str[2..])
+print(str[..4])
+
+=> ll
+=> llo
+=> hell</pre></div>
+
+  <p>
+    you can also test if a string is a subsequence of another string with the <i>index-of</i>
+    syntax
+  </p>
+  <div class="code">
+    <pre>sub?(str, smaller) ->
+  str[smaller] > -1
+
+'yellow'.sub?('ell')
+'madam im adam'.sub?('mima')
+'yellow'['lo']
+
+=> true
+=> false
+=> 3</pre></div>
+
+  <p>
+    these tools make working with strings more declarative and readable, in line with loop's
+    functional philosophy.
+  </p>
+
   <h2>Basic expressions</h2>
 
   <p>
@@ -882,9 +930,10 @@ print(~person.parent.parent.name~)
 
   <h3>If/Then/Else</h3>
   <p>
-    branching in loop is similar to haskell. because all expressions must produce a value, an if-
-    then statement must also have an <i>else</i> clause. the if portion takes any boolean and
-    evaluates the <code>then</code> clause if true, or the <code>else</code> clause if false.
+    branching in loop is similar to haskell. because all expressions must produce a value, an
+    <i>if-then</i> statement must also have an <i>else</i> clause. the <code>if</code> portion
+    takes any boolean expression and
+    evaluates the <code>then</code> clause if true, or the <code>else</code> clause if not.
   </p>
   <div class="code">
 <pre>if ~3 > 4~ then 'hooray' else 'booray'
@@ -897,8 +946,9 @@ print(~person.parent.parent.name~)
 <pre>if &lt; boolean &gt; then &lt; expression &gt; else &lt; expression &gt;</pre></div>
 
   <p>
-    the <code>&lt; boolean &gt;</code> part may consist of any expression that results in a true or
-    false value. the entire statement must generally appear on a single line
+    the <code>&lt; boolean &gt;</code> part may consist of any expression that results in a
+    <code>true</code> or <code>false</code> value. the entire
+    statement must generally appear on a single line
   </p>
   <div class="code">
 <pre>classify(val) ->
@@ -989,8 +1039,8 @@ print(~person.parent.parent.name~)
     since there is no <code>null</code> keyword, in the loop type system, we have what is known as
     a <i>bottom</i> type. if <code>Object</code> is the <i>top</i> type, meaning every type
     inherits from object, then <code>Nothing</code> is the bottom type--meaning that it inherits
-    from all types. no types may extent the <code>Nothing</code> type, and there is only one global
-    instance of this type, which is also referred to as <code>Nothing</code> in code
+    from all types. no types may inherit from <code>Nothing</code>, and there is only one global
+    instance of it, which is also referred to as <code>Nothing</code> in code
   </p>
 
   <div class="code">
@@ -1005,10 +1055,12 @@ print(~person.parent.parent.name~)
 
   <div class="code">
 <pre>Nothing.some_method().some_other_method()
+
+=> Nothing
+
 empty: {:}
 empty.name
 
-=> Nothing
 => Nothing</pre></div>
 
   <p>
@@ -1052,6 +1104,291 @@ j_option_pane.showMessageDialog(Nothing, 'hi there')
 => \#error\</pre></div>
 
 
+  <h2>Functions</h2>
+
+  <p>
+    we've already been declaring and using functions throughout the examples thus far. let's
+    look at them a bit more in depth.
+  </p>
+
+  <h3>Sequences</h3>
+
+  <p>
+    a function generally takes zero or more arguments and
+    returns a value. so far, all the functions have contained only one expression, but sometimes
+    this is not sufficient. sometimes you need to do a sequence of things in a go, this is very
+    easy:
+  </p>
+  <div class="code">
+    <pre>increment(num) ->
+  print(num),
+  num + 1
+
+3.increment()
+
+=> 3
+=> 4</pre></div>
+
+  <p>
+    here, we're executing two expressions in sequence, first we print the value of the number,
+    then we return the number plus 1. a sequence may contain as many expressions as you need
+  </p>
+
+  <div class="code">
+    <pre>do_stuff() ->
+  print('hit any key to continue...'),
+  pause(),
+  print('no, hit the ANY key to continue...'),
+  pause(),
+  print('done!')
+
+=> hit any key to continue...
+=> no, hit the ANY key to continue...
+=> done!</pre></div>
+
+  <p>
+    note that the last expression must not end in a comma. haskell programmers may be familiar
+    with this as a <i>do block</i>, and for schemers, this is the equivalent of a <code>begin</code>
+    sequence. however, unlike haskell, in loop a sequence is guaranteed to execute in order.
+  </p>
+
+  <h3>Local scope</h3>
+
+  <p>
+    it is often useful to define a set of values and functions specifically for a purpose. loop
+    provides a lightweight and simple system to accomplish this (this should be familar for
+    haskell programmers)
+  </p>
+
+  <div class="code">
+    <pre>minutes_in(num) ->
+  num * year
+  where
+    hour: 60
+    day : 24 * hour
+    week: 7 * day
+    year: 52 * week
+
+print("there are @{minutes_in(2)} minutes in 2 years")
+
+=> there are 1048320 minutes in 2 years</pre></div>
+
+  <p>
+    the <i>local</i> variables <code>hour, day, week, year</code> are only available inside the
+    scope of the <code>minutes_in()</code> function.
+  </p>
+
+  <div class="code">
+    <pre>minutes_in(num) ->
+  num * year
+  where
+    hour: 60
+    day : 24 * hour
+    week: 7 * day
+    year: 52 * week
+
+print(\year\)
+
+=> \#error\</pre></div>
+
+  <p>
+    you can even declare functions in local scope this way
+  </p>
+  <div class="code">
+    <pre>initials(name) ->
+  first(words[0]) + first(words[1])
+  where
+    words: split(name)
+    ~first(word) ->~
+      if word.isEmpty() then '' else word[0]
+
+initials('Theon Greyjoy')
+
+=> 'TG'
+
+\first\('Elric')
+
+=> \#error\</pre></div>
+
+  <p>
+    here the function <code>first()</code> is scoped locally to the parent function
+    <code>initials()</code>. it's useful to save duplicating code within the parent function,
+    but not needed elsewhere so it goes out of scope
+  </p>
+  <p>
+    locally scoped functions can also have local scopes of their own. there is no limit to the
+    nesting depth. so please use it wisely
+  </p>
+
+  <div class="code">
+    <pre>minutes_in(num) ->
+  yearify(num)
+  where
+    yearify(num) ->
+      weekify(num)
+      where
+        weekify(num) ->
+          dayify(num)
+          where
+            ...
+    </pre></div>
+
+  <h3>Module scope</h3>
+  <p>
+    by default all top-level functions in loop are public. that means any function that is
+    not part of a <i>where</i> block of another function is visible to (and callable from)
+    all other parts of the program. now, local-scope is useful for helper functions that are
+    private to a single function, but what if you want to share helpers <i>between</i> top-level
+    functions?
+  </p>
+  <p>
+    loop provides a third scope known as <i>module scope</i> for exactly this purpose. functions
+    scoped to the module level are visible to all other parts of the same module, but nowhere
+    else. in this way you can reuse important blocks of code easily, and still hide unnecessary
+    implementation details by sectioning them off from other parts of your app.
+  </p>
+  <div class="code">
+    <pre>@last(ls) ->
+  ls[ls.length() - 1]
+
+func1 ->
+  [1, 2, 3].@last()
+
+func2 ->
+  [30, 20, 10].@last()
+
+=> 3
+=> 10
+
+# a different module
+func3 ->
+  [10, 20].\@last()\
+
+=> \#error\ </pre></div>
+
+  <p>
+    you declare a function as module-scoped by simply prefixing its name with <code>@</code>.
+    loop will ensure that this function is restricted to the current module. note that this is
+    not merely a naming convention: <code>@</code>-prefixed functions have their visibility
+    enforced by the runtime.
+  </p>
+
+  <h3>Closures</h3>
+
+  <p>
+    closures, or anonymous functions, are quite useful in a language like loop where functions
+    are a first-class construct. because they can be held in variables and passed around, it is
+    sometimes useful to create small blocks of functionality that aren't necessarily declared
+    as top-level or scoped functions. these are called closures
+  </p>
+
+  <div class="code">
+    <pre>manipulate(ls, func) ->
+  func.@call(i) for i in ls
+
+manipulate([1, 2, 3], @(x) ->
+                        x * 5)
+
+=> [5, 10, 15]</pre></div>
+
+  <p>
+    in this example, i am passing a code block in the form of an anonymous function
+    (<code>@</code>-sign followed by an argument list and <code>-></code> arrow) to the
+    meta-function <code>manipulate()</code>, which, takes a list of items and calls the given
+    function for each item in the list.
+  </p>
+
+  <p>
+    the nice thing about closures is that they can refer to values in scope at the time of their
+    creation long after the scope is lost
+  </p>
+
+  <div class="code">
+    <pre>make(num) ->
+  @() ->
+    print(num)
+
+make(10).@call()
+
+=> 10</pre></div>
+
+  <h2>Pattern matching</h2>
+
+  <p>
+    so far we've looked at simple functions and sequences--functions that essentially contain a
+    single expression to manipulate and respond to input values. this is well and good for a lot
+    of use cases, but loop provides a more powerful, declarative construct called pattern matching.
+  </p>
+
+  <p>
+    pattern matching in loop is inspired by the same idea in haskell and closely mirrors the
+    latter's concepts. when used properly, pattern matching can be extremely powerful, giving you
+    concise, elegant programs that read like a solution rather than a process to follow.
+  </p>
+
+  <p>
+    pattern matching functions in loop are denoted by a <code>=></code> arrow and embody one or
+    more <i>pattern rules</i> that follow
+  </p>
+  <div class="code">
+    <pre>speak(num) =>
+  1   : 'one'
+  2   : 'two'
+
+speak(2)
+
+=> 2</pre></div>
+
+  <p>
+    this is a naively simple pattern matching function that tests if the value passed in is either
+    1 or 2 and returns the appropriate string. note that it reads like a table of mappings between
+    inputs and outputs. this is much nicer to work with than the equivalent simple function
+  </p>
+
+  <div class="code">
+    <pre>speak(num) ->
+  if num == 1 then 'one' else (if num == 2
+                               then 'two' else ...)
+
+speak(2)
+
+=> 2</pre></div>
+
+  <p>
+    notice also that we don't have a rule for values other than 1 or 2. what happens if we call
+    the pattern matching version of <code>speak()</code> with 3?
+  </p>
+
+  <div class="code">
+    <pre>speak(num) =>
+  1   : 'one'
+  2   : 'two'
+
+speak(\ 3\ )
+
+=> \#error: Non-exhaustive pattern rules\</pre></div>
+
+  <p>
+    since there is no behavior specified, loop objects to this value being passed in to
+    <code>speak()</code>. now, this is fine for 3 but what about every other value we haven't
+    specified? in the simple if/then case we can handle this with an additional <code>else</code>,
+    however in pattern matching we can use a <i>wildcard</i> rule
+  </p>
+
+  <div class="code">
+    <pre>speak(num) =>
+  1   : 'one'
+  2   : 'two'
+  *   : 'other'
+
+speak(3)
+
+=> other</pre></div>
+
+  <p>
+    the asterisk - <code>*</code> denotes any value, and is matched last, if all the other rules
+    fail.
+  </p>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
     Some rights reserved.</section>
