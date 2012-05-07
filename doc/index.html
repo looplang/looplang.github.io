@@ -512,7 +512,7 @@ pick(~[1..7]~)    # generate a list of 1-7
   <h3>Sets</h3>
 
   <p>
-    similarly, loop provides a natural and familiar syntax for working with sets. a set is similar
+    similarly, loop provides a natural syntax for working with sets. a set is similar
     to a list except that it is a collection of unique items and that they are present in no
     particular order
   </p>
@@ -526,8 +526,10 @@ pick(~[1..7]~)    # generate a list of 1-7
 
   <h3>Maps</h3>
   <p>
-    maps are an extremely useful data structure in loop. they are implementations compliant with
-    <code>java.util.Map</code> and are created using a familar json-like syntax:
+    maps are an extremely useful data structure. sometimes called <i>hashtables</i> or
+    just <i>hashes</i>, a map is basically an collection of key/value pairs.
+    they are supported natively by loop and
+    created using a familar json-like syntax:
   </p>
   <div class="code">
     <pre>{ 'name' : 'Tyrion',
@@ -535,15 +537,15 @@ pick(~[1..7]~)    # generate a list of 1-7
 
 => { name=Tyrion, house=Lannister }</pre></div>
   <p>
-    maps may also contain any type or many types as both keys and values
+    maps may contain any type or many types as either keys or values
   </p>
   <div class="code">
     <pre>{ 1 : 'one',
-  2 : 'two' }
+ @2 : 'two' }
 
 => { 1=one, 2=two }</pre></div>
   <p>
-    read values out of maps using simple dot syntax, like in json
+    read values out of maps using simple dot syntax (like in json)
   </p>
   <div class="code">
     <pre>{ 'name' : 'Tyrion',
@@ -551,7 +553,18 @@ pick(~[1..7]~)    # generate a list of 1-7
 
 => "Lannister pays his debts"</pre></div>
   <p>
-    for keys not known until runtime, you can use the bracket syntax, similar to list indexing
+    dot syntax can be chained to read from nested maps (maps inside maps) too
+  </p>
+  <div class="code">
+    <pre>~mymap.city.name~
+
+=> "Sydney"</pre></div>
+  <p>
+    note that the map keys that occur after the '.' must be strings to use this syntax.
+  </p>
+  <p>
+    for keys that are not strings, or not known until runtime, you can use the bracket syntax,
+    similar to indexing into a list
   </p>
   <div class="code">
     <pre>read(map, key) ->
@@ -561,6 +574,9 @@ read({ 'name' : 'Tyrion'}, 'name')
 
 => "Tyrion"</pre></div>
   <p>
+    here the <code>[key]</code> part tells loop to look for an entry in the map whose value is
+    equivalent to the variable, key. later, when we call <code>read()</code>, the variable
+    <code>key</code> contains <code>"name"</code> and so prints <code>"Tyrion"</code>
     you can also write to maps, similarly
   </p>
   <div class="code">
@@ -574,6 +590,11 @@ starkify({ 'name' : 'Tyrion'})
     this is the first time we've seen the assign operator <code>':'</code> (interchangeable with
     <code>'='</code>). we'll encounter it a lot more further on but for now, read it as assigning
     the value to the right of the <code>:</code> to the slot represented by its left.
+  </p>
+
+  <p>
+    like sets and lists, maps are also fully compatible with java's <code>java.util.Map</code>
+    type.
   </p>
 
   <h3>Trees</h3>
@@ -617,8 +638,8 @@ starkify({ 'name' : 'Tyrion'})
 => true</pre></div>
 
   <p>
-    all these data types and structures we've learned about thus far can be combined or nested
-    to create a rich ontology to suit your needs
+    all these data types and structures we've learned about can be combined
+    to model rich ontologies to suit your needs
   </p>
   <div class="code">
     <pre>{ @houses: { 'Lannister', 'Stark', 'Targaryen' },
@@ -627,7 +648,410 @@ starkify({ 'name' : 'Tyrion'})
                 'Targaryen'    : 'Dragonstone',
                 'Casterly Rock : 'Lannister' ]}</pre></div>
 
-  <h2>Advanced expressions</h2>
+  <h2>Basic expressions</h2>
+
+  <p>
+    ok now we're armed with numeric, string and structure types and know a tiny bit about how
+    to call functions with arguments. let's delve a bit deeper
+  </p>
+  <h3>Calling functions</h3>
+  <p>
+    a function is one of the most basic constructs in loop. a function takes in values
+    (called <i>arguments</i>) and returns a single value, always.
+    there are no <i>void</i> functions in loop. at runtime, loop functions are compiled directly
+    into java functions. you call a loop function by writing its name followed by an argument list
+    enclosed in parentheses - <code>()</code>
+  </p>
+  <div class="code">
+    <pre>print('hi')</pre></div>
+  <p>
+    not all functions have arguments, but the parentheses must always be present:
+  </p>
+  <div class="code">
+    <pre>hi ->
+  print('hi')
+
+hi()
+
+=> hi</pre></div>
+
+  <p>
+    loop functions can take anything as an argument: numbers, strings, objects, or even other
+    functions
+  </p>
+  <div class="code">
+    <pre>meta(func) ->
+  func.@call('hi')   # calls print()
+
+meta(print)
+
+=> hi</pre></div>
+  <p>
+    note the special syntax to call a function. the variable <code>func</code> contains a reference
+    to the <code>print()</code> function. to invoke it, we call the special form
+    <code>@call</code>, which in turn calls <code>print</code> with its own arguments.
+  </p>
+  <p>
+    a function can be treated like any other value in loop, it can be stored in a variable or
+    passed around to other functions as we've just done.
+  </p>
+  <p>
+    as we've seen earlier you can also call methods on java objects. this happens in exactly the
+    same way as in java
+  </p>
+  <div class="code">
+    <pre>print('hi'.toUpperCase())
+
+=> HI</pre></div>
+  <p>
+    here, we're calling the java method <code>String.toUpperCase()</code>, and then passing its
+    result to <code>print()</code>. you can call methods on any object in loop this way.
+  </p>
+  <div class="code">
+    <pre>print('hi'.toUpperCase().toLowerCase())
+print(22L.intValue())
+print(new java.util.Date().getClass().getName())
+
+=> hi
+=> 22
+=> java.util.Date</pre></div>
+
+  <p>
+    loop also provides a form for calling loop functions like you call methods. this is know as the
+    <i>call-as-method</i> feature. let's define a simple loop function <code>triple()</code>, that
+    takes an integer and multiplies it by 3.
+  </p>
+  <div class="code">
+    <pre>triple(i) ->
+  i * 3
+
+triple(2)
+
+=> 6</pre></div>
+
+  <p>
+    this is the standard way to call loop functions, but you can also write it like this:
+  </p>
+  <div class="code">
+    <pre>triple(i) ->
+  i * 3
+
+2.triple()
+
+=> 6</pre></div>
+  <p>
+    in this instance we're treating the left hand side of the function as its first argument. you
+    can call any loop functions (that are in the current namespace) 'as methods' this way, including
+    ones that take multiple arguments
+  </p>
+  <div class="code">
+    <pre>multiply(x, y) ->
+  x * y
+
+5.multiply(6)
+
+=> 30</pre></div>
+  <p>
+    call-as-method provides a nice scheme for 'extending' the functionality of existing
+    objects. all these values we've dealt with so far are standard java strings and integers. you
+    can even use this form to <i>override</i> existing java methods with your own functionality
+  </p>
+  <div class="code">
+    <pre>toLowerCase(str) ->
+  str.toUpperCase()
+
+'hi'.toLowerCase()
+
+=> 'HI'</pre></div>
+  <p>
+    of course, you'll want to be careful when doing this to avoid confusing yourself later. loop
+    provides an escape hatch in case you want to bypass any overrides and ensure that the
+    underlying java method is being called.
+  </p>
+  <div class="code">
+    <pre>toLowerCase(str) ->
+  str.toUpperCase()
+
+'HI'<-toLowerCase()
+
+=> 'hi'</pre></div>
+  <p>
+    the <code>'<-'</code> reverse arrow operator signifies that a java method on the object is
+    called. you are encouraged to use clear conventions to keep these schemes clear. for instance,
+    i like to use the underscore naming convention for loop functions to distinguish them from
+    java methods.
+  </p>
+  <div class="code">
+    <pre># loop function
+'Now is the winter of our discontent'.to_lower()
+
+# java method
+'Now is the summer of our content'.toLowerCase()
+</pre></div>
+  <p>
+    you may instead, prefer to use the <code>'<-'</code> reverse arrow to distinguish them.
+  </p>
+  <div class="code">
+    <pre># loop function
+'Now is the winter of our discontent'.toLowerCase()
+
+# java method
+'Now is the summer of our content'<-toLowerCase()
+</pre></div>
+
+  <p>
+    loop doesn't mandate one or the other, and in fact i prefer using the reverse arrow only
+    when i want to clarify a potential override.
+  </p>
+
+  <h3>Navigating objects</h3>
+  <p>
+    we've looked at calling functions, now let's look at the values that functions manipulate and
+    operate on: objects. all values in loop are compatible with java objects and vice versa. often
+    objects are more than just a simple scalar value, they consist of a structure of values--as we
+    saw earlier in the case of maps and lists.
+  </p>
+  <p>
+    we saw that maps could be navigated by using the <i>dot syntax</i>, in other words, we can read
+    values from the deep structure of the map by specifying a path to the desired slot
+  </p>
+  <div class="code">
+<pre>food: {
+  @name: 'Pancake',
+  @nutrition: { @calories: 810, @protein: 0.2 }
+}
+
+print(~food.nutrition.calories~)
+
+=> 810</pre></div>
+
+  <p>
+    in this example, we pick out the <code>calories</code> by specifying a path down the
+    <i>graph</i> structure of the map. this should be familiar to you if you've used ruby or python.
+    loop provides an identical scheme for navigating all types of objects:
+  </p>
+
+  <div class="code">
+<pre>now: new java.util.Date()
+
+print(~now.time~)
+
+=> 1335878239084</pre></div>
+
+  <p>
+    here, im reading the <code>time</code> property out of a java <code>Date</code> object using
+    the same dot-syntax. this 'property', in java, is represented by the pair of methods:
+    <code>getTime()</code> and <code>setTime()</code>. the java convention is to declare method
+    pairs like this to expose <i>properties</i>.
+    (in ruby they are called <i>attribute accessors</i>.)
+  </p>
+  <p>
+    loop will correctly translate this to a java method call as required. let's look at a more
+    realistic example
+  </p>
+  <div class="code">
+<pre># java code
+public class Person {
+  private Person parent;
+  private String name;
+
+  public Person getParent() {
+    return parent;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  // etc..
+}
+
+
+# loop code that reads java object
+print("Gran's name is")
+print(~person.parent.parent.name~)
+
+=> Gran's name is
+=> Grantastic E. Gran</pre></div>
+
+  <p>
+    the property navigation syntax becomes extremely useful as you write complex programs that
+    interact with existing java code and libraries. loop objects can also be navigated similarly,
+    as we'll see in the section on <i>classes & objects</i>.
+  </p>
+
+  <h3>If/Then/Else</h3>
+  <p>
+    branching in loop is similar to haskell. because all expressions must produce a value, an if-
+    then statement must also have an <i>else</i> clause. the if portion takes any boolean and
+    evaluates the <code>then</code> clause if true, or the <code>else</code> clause if false.
+  </p>
+  <div class="code">
+<pre>if ~3 > 4~ then 'hooray' else 'booray'
+
+=> booray</pre></div>
+  <p>
+    or more generally:
+  </p>
+  <div class="code">
+<pre>if &lt; boolean &gt; then &lt; expression &gt; else &lt; expression &gt;</pre></div>
+
+  <p>
+    the <code>&lt; boolean &gt;</code> part may consist of any expression that results in a true or
+    false value. the entire statement must generally appear on a single line
+  </p>
+  <div class="code">
+<pre>classify(val) ->
+  if val > 1000 then print('big') else print('small')
+
+99.classify()
+
+=> small</pre></div>
+
+  <p>
+    but you can split it across multiple lines if the whole expression is wrapped in parentheses
+  </p>
+  <div class="code">
+<pre>classify(val) ->
+  (if val < 1000 and val > 100
+   then print('middling')
+   else print('unknown'))
+
+101.classify()
+
+=> middling</pre></div>
+
+  <p>
+    notice I snuck in an <code>and</code> keyword here. you can similarly use <code>or</code> and
+    <code>not</code> operators to combine boolean expressions, arithmetically.
+  </p>
+
+  <h3>List comprehension</h3>
+  <p>
+    we've already seen how lists can be sliced and their indexes read. but we can do a lot more
+    with them. loop provides a class of expressions known as <i>list comprehensions</i> to quickly
+    transform and make sense of lists. comprehensions replace the traditional do-while
+    constructs of c and java. take a look
+  </p>
+  <div class="code">
+<pre>i * 2 for i in [1, 2, 3]
+
+=> [2, 4, 6]</pre></div>
+
+  <p>
+    here i am saying, for every item in the given list <code>[1, 2, 3]</code>, multiply that item
+    by 2. list comprehensions act on any kind of collection (all instances of
+    <code>java.util.Collection</code>) and always produce lists of equal or smaller size. for
+    example:
+  </p>
+
+  <div class="code">
+<pre>i for i in [1..10] ~if i % 2 == 0~
+
+=> [1, 3, 5, 7, 9]</pre></div>
+
+  <p>
+    here i am <i>filtering</i> the a list of integers from 1 to 10 by whether or not they are odd
+    (i.e. <code>i % 2 == 0</code>). the resulting list contains only items that passed the filter.
+    you can even combine the filter and transformation expressions
+  </p>
+
+
+  <div class="code">
+<pre>~i * 10~ for i in [1..10] ~if i % 2 not 0~
+
+=> [20, 40, 60, 80, 100]</pre></div>
+
+  <p>
+    expressed more generally, a list comprehension is
+  </p>
+
+  <div class="code">
+<pre>< expression > for < var > in < list > [if < filter >]</pre></div>
+
+  <p>
+    the first expression is evaluated once for every item in the list that passes the filter. the
+    result of that expression is added to the output list. the filter is optional.
+  </p>
+  <p>
+    list comprehensions must also appear on a single line but can be multiline if enclosed in
+    parentheses, just like if/then/else expressions.
+  </p>
+
+  <h3>Null-safety</h3>
+  <p>
+    loop is a null-safe language. this means that loop expressions will not throw a
+    <code>NullPointerException</code> on receiving null values. there are some exceptions to this,
+    but as a general rule, loop strives to acheive a practical reduction of NPEs and the use of
+    <code>null</code> in code.
+  </p>
+  <p>
+    since there is no <code>null</code> keyword, in the loop type system, we have what is known as
+    a <i>bottom</i> type. if <code>Object</code> is the <i>top</i> type, meaning every type
+    inherits from object, then <code>Nothing</code> is the bottom type--meaning that it inherits
+    from all types. no types may extent the <code>Nothing</code> type, and there is only one global
+    instance of this type, which is also referred to as <code>Nothing</code> in code
+  </p>
+
+  <div class="code">
+<pre>Nothing
+
+=> Nothing</pre></div>
+
+  <p>
+    this bit of theory aside, in practical terms you can rest assured that calling a method on
+    a <code>Nothing</code> will not break your code--it simply returns <code>Nothing</code> again
+  </p>
+
+  <div class="code">
+<pre>Nothing.some_method().some_other_method()
+empty: {:}
+empty.name
+
+=> Nothing
+=> Nothing</pre></div>
+
+  <p>
+    this even holds for java code that returns <code>null</code>
+  </p>
+
+  <div class="code">
+<pre>''.getClass().getResource('doesnt_exist').toString()
+
+=> Nothing</pre></div>
+
+  <p>
+    if you need to pass <code>null</code> into java apis for some reason, you can use
+    <code>Nothing</code> instead
+  </p>
+
+
+  <div class="code">
+<pre>person.parent = Nothing
+city.setName(Nothing)
+j_option_pane.showMessageDialog(Nothing, 'hi there')
+# ..</pre></div>
+
+  <p>
+    loop will correctly translate this when calling into java, without any performance penalty.
+  </p>
+  <p>
+    of course, loop cannot prevent <code>NullPointerException</code>s from being thrown in java
+    code, so code that already does will continue to behave as expected. loop does not try to
+    catch and translate them into <code>Nothing</code>s. you will have to handle them as you do
+    any other exception (more in the section on <i>control flow</i>).
+  </p>
+  <p>
+    additionally, loop does not permit <code>Nothing</code> in computations. it is a type error to
+    attempt to compute with <code>Nothing</code> and this will cause an exception at runtime.
+  </p>
+
+  <div class="code">
+<pre>1 + \Nothing\
+
+=> \#error\</pre></div>
+
+
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
     Some rights reserved.</section>
