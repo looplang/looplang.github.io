@@ -1355,8 +1355,7 @@ speak(2)
 => 2</pre></div>
 
   <p>
-    notice also that we don't have a rule for values other than 1 or 2. what happens if we call
-    the pattern matching version of <code>speak()</code> with 3?
+    much less readable. now let's go back to the pattern matching form
   </p>
 
   <div class="code">
@@ -1369,8 +1368,11 @@ speak(\ 3\ )
 => \#error: Non-exhaustive pattern rules\</pre></div>
 
   <p>
-    since there is no behavior specified, loop objects to this value being passed in to
-    <code>speak()</code>. now, this is fine for 3 but what about every other value we haven't
+    notice also that we don't have a rule for values other than 1 or 2. what happens if we call
+    the pattern matching version of <code>speak()</code> with 3?
+
+    since there is no behavior specified, loop complains that the rules are insufficient.
+    and what about every other value we haven't
     specified? in the simple if/then case we can handle this with an additional <code>else</code>,
     however in pattern matching we can use a <i>wildcard</i> rule
   </p>
