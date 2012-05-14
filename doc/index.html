@@ -1342,7 +1342,7 @@ speak(2)
   <p>
     this is a naively simple pattern matching function that tests if the value passed in is either
     1 or 2 and returns the appropriate string. note that it reads like a table of mappings between
-    inputs and outputs. this is much nicer to work with than the equivalent simple function
+    inputs and outputs. this is much nicer to work with than the equivalent standard form
   </p>
 
   <div class="code">
@@ -1368,20 +1368,19 @@ speak(\ 3\ )
 => \#error: Non-exhaustive pattern rules\</pre></div>
 
   <p>
-    notice also that we don't have a rule for values other than 1 or 2. what happens if we call
+    notice that we don't have a rule for values other than 1 or 2. what happens if we call
     the pattern matching version of <code>speak()</code> with 3?
 
     since there is no behavior specified, loop complains that the rules are insufficient.
-    and what about every other value we haven't
-    specified? in the simple if/then case we can handle this with an additional <code>else</code>,
-    however in pattern matching we can use a <i>wildcard</i> rule
+    in the simple if/then case we can handle this with an additional <code>else</code>,
+    however in pattern matching we need to use a <i>wildcard</i> rule
   </p>
 
   <div class="code">
     <pre>speak(num) =>
   1   : 'one'
   2   : 'two'
-  *   : 'other'
+  ~*   : 'other'~
 
 speak(3)
 
@@ -1390,6 +1389,731 @@ speak(3)
   <p>
     the asterisk - <code>*</code> denotes any value, and is matched last, if all the other rules
     fail.
+  </p>
+  <p>
+    of course this will match <i>anything</i> not just other numbers
+  </p>
+
+  <div class="code">
+    <pre>speak(num) =>
+  1   : 'one'
+  2   : 'two'
+  *   : 'other'
+
+speak(~'dont say a word!'~)
+
+=> other</pre></div>
+
+  <p>
+    if you want the rules to be stricter (so the function only accepts integers), you can impose
+    a <i>type pattern rule</i> instead
+  </p>
+
+
+  <div class="code">
+    <pre>speak(num) =>
+  1       : 'one'
+  2       : 'two'
+  ~Integer : 'other'~
+
+speak(3)
+
+=> other
+
+speak(\'say no more'\)
+
+=> \#error: Non-exhaustive pattern rules\</pre></div>
+
+  <p>
+    note that the order in which the rules appear is important.
+  </p>
+
+  <h3>Polymorphism</h3>
+
+  <p>
+    as you may have guessed, loop's alternative to <i>function overloading</i> is the use of
+    mixed pattern rules. a single function can be made to perform different actions
+    depending on the input type, using pattern matching
+  </p>
+
+
+  <div class="code">
+    <pre>times(val, num) =>
+  Integer, *   : val * num
+  String, *    : val for val in [1..num]
+
+1.times(4)
+
+=> 4
+
+'hi'.times(2)
+
+=> [hi, hi]</pre></div>
+
+  <p>
+    here we've introduced two new concepts:
+  </p>
+  <div>
+    <ul class="features">
+      <li><img src="../images/arrow_right.png" alt="bullet">polymorphism</li>
+      <li><img src="../images/arrow_right.png" alt="bullet">multiple arguments</li>
+    </ul>
+  </div>
+
+  <p>
+    polymorphism in this instance is simply allowing you to call the same function with an integer
+    and string respectively. with multiple arguments, the second argument is a wildcard
+    rule and is separated by a comma after the first rule. all argument rules must appear on the
+    same line.
+  </p>
+  <p>
+    a pattern matching function <i>must have</i> a rule for each of its arguments. if you dont
+    care what an argument is, use the wildcard rule as we've just done. otherwise remember that
+    all the rules you declare are tested in the order the appear.
+  </p>
+
+  <p>
+    you can of course, freely mix type rules with other kinds of rules to easily match a variety
+    of different inputs.
+  </p>
+
+  <h3>List patterns</h3>
+
+  <p>
+    the simplest form of list pattern matching is literally matching the empty list:
+  </p>
+
+
+  <div class="code">
+    <pre>empty?(ls) =>
+  []      : true
+  *       : false
+
+empty?([])
+
+=> true</pre></div>
+
+  <p>
+    in this instance the empty list matcher matches ahead of the wildcard. you can also match
+    a single element list:
+  </p>
+
+  <div class="code">
+    <pre>only_item(ls) =>
+  ~[x]~   : x
+
+[88].only_item()
+
+=> 88</pre></div>
+
+  <p>
+    the neat thing here is that not only do you match the pattern rule but it also lets you
+    extract items from the list conveniently. the variable <code>x</code> holds the only list
+    element, and can be used in the right-hand side conveniently,
+    as though it were an argument itself. this is known as list <i>destructuring</i>.
+  </p>
+
+  <p>
+    list patterns are among the most useful of pattern matching capabilities in loop. the basic
+    idea is to <i>destructure</i> a list into individual parts and process the items declaratively.
+    as we'll see, this makes list processing code really easy to write
+  </p>
+
+
+  <div class="code">
+    <pre>reverse(ls) =>
+  []         : []
+  [x:rest]   : reverse(rest) + [x]
+
+reverse([1, 2, 3, 4, 5])
+
+=> [5, 4, 3, 2, 1]</pre></div>
+
+  <p>
+    this function as its name implies, reverses any list passed in. the way you read this
+    is as follows.
+  </p>
+
+  <p>
+    the reverse of the empty list is the empty list:
+  </p>
+
+  <div class="code">
+    <pre>reverse(num) =>
+  ~[]         : []~
+  [x:rest]   : reverse(rest) + [x]</pre></div>
+
+  <p>
+    the reverse of any list that has <i>at least one</i> item is the first item (<code>x</code>)
+    appended to the
+    reverse of the <i>remaining</i> items (<code>rest</code>).
+  </p>
+
+  <div class="code">
+    <pre>reverse(num) =>
+  []         : []
+  ~[x:rest]   : reverse(rest) + [x]~</pre></div>
+
+  <p>
+    this is what's known as a <i>recursive function</i>, meaning that it calls itself (recurses)
+    in order to complete its task. let's look at how this function destructures a simple list like
+    <code>[1, 2, 3]</code>
+  </p>
+
+  <div class="code">
+    <pre>reverse([1, 2, 3]):  1:[2, 3]  : reverse(~[2, 3]~) + [1]
+reverse([2, 3]):     2:[3]     : reverse(~[3]~) + [2]
+reverse([3]):        3:[]      : reverse(~[]~) + [3]
+reverse([]):         []        : ~[]~
+
+=> [3, 2, 1]</pre></div>
+
+  <p>
+    each line above represents a call of the function. on the left are the arguments it is called
+    with, and on the right the pattern rule that matched and its values, after destructuring.
+    what happens is that each additional recursive call gets a step closer to the empty list and
+    when you unravel this stack of calls, you get the list in reverse order.
+  </p>
+  <p>
+    read the rightmost part of the expression (in bold) from the bottom up to
+    illustrate this point
+  </p>
+
+  <div class="code">
+    <pre>reverse([1, 2, 3]):  1:[2, 3]  : reverse([2, 3]) ~+ [1]~
+reverse([2, 3]):     2:[3]     : reverse([3]) ~+ [2]~
+reverse([3]):        3:[]      : reverse([]) ~+ [3]~
+reverse([]):         []        : ~[]~
+
+# reading upwards:
+~[] + [3] + [2] + [1]~ => [3, 2, 1]</pre></div>
+
+  <h3>Object patterns</h3>
+
+  <p>
+    any object (including maps) can also be pattern matched, like lists. the primary use is to
+    destructure object graphs and enable more declarative code that is easier to write and read.
+  </p>
+
+
+  <div class="code">
+    <pre>gran(person) =>
+  ~{ g <- person.parent.parent }~   : g.name</pre></div>
+
+  <p>
+    this will print the person's grandparent's name if you have an object graph that looks
+    something like this:
+  </p>
+
+
+  <div class="code">
+    <pre>billy: { @name: 'Billy',
+         @parent: { @name: 'Willy',
+                    @parent: { @name: 'Silly' }
+                  }
+}
+
+gran(billy)
+
+=> Silly</pre></div>
+
+  <p>
+    let's look at this code in a bit more detail:
+  </p>
+
+
+  <div class="code">
+    <pre>gran(person) =>
+  ~{ g <- person.parent.parent }~   : g.name</pre></div>
+
+  <p>
+    first we have a new type of pattern rule, encased in braces - <code>{}</code>. this signals
+    to loop that the function should expect an object to destructure. next there is a variable,
+    <code>g</code>, followed by a <i>reverse</i> arrow <code><-</code>, which indicates that
+    <code>g</code> should <i>receive</i> the result of the destructuring.
+  </p>
+
+  <div class="code">
+    <pre>gran(person) =>
+  { ~g <-~ person.parent.parent }   : g.name</pre></div>
+
+  <p>
+    on the right side of the reverse arrow is the path expression in dot syntax. recall path
+    expressions from the section on <i>object navigation</i>. in this instance we are asking for
+    the <code>parent</code> of the <code>parent</code> of argument <code>person</code>.
+  </p>
+
+  <div class="code">
+    <pre>gran(person) =>
+  { g <- ~person.parent.parent~ }   : g.name</pre></div>
+
+  <p>
+    finally on the right hand side of the rule itself, is another path expression
+    <code>g.name</code>, which, is the result we want to return if this pattern rule matches.
+  </p>
+
+
+  <div class="code">
+    <pre>gran(person) =>
+  { g <- person.parent.parent }   : ~g.name~</pre></div>
+
+  <p>
+    this is a rather simple example, and it can be rewritten as a standard function as follows:
+  </p>
+
+
+  <div class="code">
+    <pre>gran(person) ->
+  person.parent.parent.name</pre></div>
+
+  <p>
+    but for more complex object patterns, or for polymorphism, the pattern matching form is quite
+    useful. you can add as many destructurings as required in a single object pattern rule:
+  </p>
+
+
+  <div class="code">
+    <pre>gran(person) =>
+  { g <- person.parent.parent,
+    ~n <- person.name~ }    : "@{n}'s gran is @{g.name}"
+
+=> Billy's gran is Silly</pre></div>
+
+  <p>
+    and also, mix object pattern rules with other kinds of patterns.
+  </p>
+
+  <h3>String patterns</h3>
+
+  <p>
+    string pattern matching is one are where loop shines. there are a variety of useful tools
+    for matching patterns in text. these can be combined to make quite powerful parsers and
+    text processors, that are readable and concise.
+  </p>
+
+  <p>
+    firstly, as you might guess, any string literal can be matched as a simple rule:
+  </p>
+
+
+  <div class="code">
+    <pre>numberize(str) =>
+  'one'     : 1
+  'two'     : 2
+  'three'   : 3
+
+numberize('two')
+
+=> 2</pre></div>
+
+  <p>this scheme will also match symbols</p>
+
+  <div class="code">
+    <pre>numberize(str) =>
+  'one'     : 1
+  'two'     : 2
+  'three'   : 3
+
+numberize(@two)
+
+=> 2</pre></div>
+
+  <p>
+    of course, for clarity you should use symbols directly in your pattern rule where appropriate:
+  </p>
+
+  <div class="code">
+    <pre>numberize(str) =>
+  @one     : 1
+  @two     : 2
+  @three   : 3
+
+numberize(@two)
+
+=> 2</pre></div>
+
+  <p>
+    but this is just the tip of the iceberg. strings can also be destructured in a manner very
+    similar to lists:
+  </p>
+
+  <div class="code">
+    <pre>initial(name) =>
+  (~i:rest~)     : i
+
+initial('Megatron')
+
+=> M</pre></div>
+
+  <p>
+    here the destructuring works by pulling apart the leading character of the string. note that
+    we use parentheses - <code>()</code> instead of brackets - <code>[]</code> in the pattern rule.
+    this is necessary to inform loop that we are matching a string and not a list.
+  </p>
+
+  <p>
+    but strings can be destructured in even cooler ways. by specifying a delimiter, you can tell
+    loop to split a string around a particular character sequence:
+  </p>
+
+  <div class="code">
+    <pre>flip(name) =>
+  (~first~ : ' ' : ~last~)  : "@{last}, @{first}"
+
+flip('Optimus Prime')
+
+=> Prime, Optimus</pre></div>
+
+  <p>
+    note that in this example, we use a single space to pattern match around. all the characters
+    before it are destructured into <code>first</code> and those after it into <code>last</code>.
+  </p>
+
+  <p>
+    there is no limit to how many delimiters you can add to create a pattern:
+  </p>
+
+  <div class="code">
+    <pre>select(str) =>
+  ('A':a:'B':b:'C':c:'D':d)   : a + b + c + d
+
+select('A1B2C3D4')
+
+=> 1234</pre></div>
+
+  <p>
+    and there is no restriction on the length of the delimiters
+  </p>
+
+  <div class="code">
+    <pre>extract(str) =>
+  ('Now is the ': ~season~ :' ':ignore)  : season
+
+extract('Now is the winter of our discontent')
+
+=> ~winter~
+
+extract('Now is the summer of your content')
+
+=> ~summer~</pre></div>
+
+  <p>
+    you can use this technique recursively to process several lines, from a text file for example:
+  </p>
+
+  <div class="code">
+    <pre>uncomma(str) =>
+  ''                     : ''
+  (word: ',' : ~rest~)   : word + '\n' + ~uncomma(rest)~
+
+uncomma(read('bots.csv'))
+
+# given a file, 'bots.csv' containing:
+Perceptor,Astrotrain,Starscream,Soundwave
+
+=> Perceptor
+=> Astrotrain
+=> Starscream
+=> Soundwave</pre></div>
+
+  <p>
+    notice the base case for the empty string, which is needed to terminate the recursion when
+    the end of the file text is reached.
+  </p>
+
+  <p>
+    on top of this, loop also provides powerful regex pattern matching:
+  </p>
+
+  <div class="code">
+    <pre>judge(str) =>
+  /(t|w)alk(ing)?/   : print('Good')
+  *                  : print('Lazy!')
+
+judge('talk')
+judge('walking')
+judge('idle')
+
+=> Good
+=> Good
+=> Lazy!</pre></div>
+
+  <p>
+    in this instance, the regular expression (signified by bounding slashes - <code>//</code>) is
+    used to match whether or not the first rule should apply. it is slightly simpler than the
+    earlier examples in that it does not destructure the string in any way, instead is used to
+    accept a more flexible range of inputs.
+  </p>
+
+  <p>
+    but! if you <i>really</i> want to destructure using a regex pattern, that is also
+    supported using a regex standard known as <i>named capturing groups</i>. a named capturing
+    group is any capturing group
+    occurring inside a regular expression (enclosed in parentheses - <code>()</code>) that also is
+    tagged with a name. this is done using a special syntax.
+    the name is then extracted and made available as a variable:
+  </p>
+
+  <div class="code">
+    <pre>
+extract(activity) =>
+  /(?&lt; ~verb~ &gt;(t|w)alk)(ing)?/   : verb
+
+extract('walking')
+extract('talk')
+extract('talking')
+
+=> walk
+=> talk
+=> talk</pre></div>
+
+  <p>
+    see <a href="http://www.regular-expressions.info/named.html">this website</a> for more
+    information on named capturing groups and how to write them.
+    but do use them sparingly, excessive use of named groups can make regexes
+    (which are, let's face it, already quite messy) totally illegible.
+  </p>
+
+  <h3>Guards</h3>
+
+  <p>
+    guards are an addendum to pattern matching and can be seen as an extra line of defense
+    for declarative code before resorting to if/then/elses function bodies. whereas pattern
+    rules focus on the type and structure of the data, guards
+    are meant to be able to test specific conditions using arbitrary logic. let's take a look:
+  </p>
+
+  <div class="code">
+    <pre>
+gender(name) =>
+  String     | name.startsWith('Mr.')    : @male
+             | name.startsWith('Mrs.')   : @female
+             | name.startsWith('Ms.')    : @female
+             | else                      : @unknown
+  *                                      : @error
+
+
+gender('Mr. Rogers')
+gender('Ms. Marple')
+
+=> male
+=> female</pre></div>
+
+  <p>
+    the trick here is that a guard is just any boolean expression that allows the execution of
+    the right-hand expression if true. you can place arbitrary logic in a guard expression, as
+    long as it evaluates to <code>true</code> or <code>false</code>:
+  </p>
+
+  <div class="code">
+    <pre>gender(name) =>
+  String     | name.startsWith('Mr.')    : @male
+             | name.startsWith('Mrs.')   : @female
+             | ~name.startsWith('Ms.')    :~ @female
+             | else                      : @unknown
+  ...</pre></div>
+
+  <p>
+    in our case we're testing the salutation of a name against a number of literal values (Mr, Mrs
+    and Ms). but notice that we have an extra clause at the end, an <code>else</code> clause. this
+    is necessary if the pattern matches but none of the other guard expressions do. all guarded
+    patterns <i>must</i> have an <code>else</code> expression (if you recall what we said about
+    if/then/else expressions, this will make sense).
+  </p>
+
+  <p>
+    furthermore, it is important to distinguish between the <code>else</code> expression, which is
+    effectively the default case against a <i>matched</i> pattern and the wilcard
+    pattern--which is a catchall if no <i>patterns</i> matched.
+  </p>
+
+  <p>
+    in the example case we can trigger the else clause by specifying any string that is missing
+    a salutation:
+  </p>
+
+  <div class="code">
+    <pre>gender('Pat')
+
+=> unknown</pre></div>
+
+  <p>
+    this is different from the wilcard rule, which matches anything that failed the previous
+    patterns (and is effectively polymorphic):
+  </p>
+
+  <div class="code">
+    <pre>gender(22)
+
+=> error</pre></div>
+
+  <p>
+    in a sense, you can think of guards as analogous to a <code>switch</code> statement in c or
+    java, except that they can handle any kind of expression, and do so in linear order. a better
+    analogue might be an if-elseif-elseif-elseif-... style block, with a final else. except that
+    guards are far easier to read and far simpler to write.
+  </p>
+
+  <p>
+    here is a guarded function that determines if an integer falls into predefined ranges:
+  </p>
+
+  <div class="code">
+    <pre>range(x) =>
+  *           | x > 100     : @large
+              | x < 0       : @negative
+              | x < 100     : @small
+              | else        : @exactly100
+
+range(224)
+range(4)
+range(-6)
+
+=> large
+=> small
+=> negative</pre></div>
+
+  <p>
+    notice how the order of evaluation played a part in our function, which correctly classifies
+    values between 0 and 100 as small, even though the <code>@small</code> rule is only written to check for
+    <code>x < 100</code>. using guards this way makes complex branching easy to visualize and
+    reason about.
+  </p>
+
+  <p>
+    sometimes people are confused between when you need to use a guard and when you use just another
+    pattern rule. there are no strict guidelines about this, but one way to think of it that
+    patterns are about the structure of objects, and guards about their <i>value</i>, or data.
+  </p>
+
+  <p>
+    this distinction becomes clear when you consider that pattern rules do not cause any functions
+    to be called, whereas guards often do. meaning that pattern rules describe the static behavior
+    of the program (what types are accepted, what structure of objects or pattern of strings), and
+    guards describe the dynamic behavior of the program, i.e. what result is produced if a
+    condition is satisfied.
+  </p>
+
+  <p>
+    guards are useful in a variety of situations, and they may be applied on any kind
+    of pattern rule. look at some loop examples to get a feel for how guards can be used.
+  </p>
+
+  <h2>Control flow</h2>
+
+  <p>
+    since loop is a jvm language, it honors the java system of exceptions for handling control
+    flow in error cases. loop exceptions are just java exceptions except that it does not support
+    the concept of <i>checked exceptions</i>. all exceptions in loop are <i>unchecked</i>,
+    usually a kind of <code>RuntimeException</code>.
+  </p>
+
+  <h3>Raising exceptions</h3>
+
+  <p>
+    exceptions in loop are <i>thrown</i> using the <code>raise()</code> function which is always
+    available in all programs:
+  </p>
+
+  <div class="code">
+    <pre>divide_by(x, y) ->
+  if y != 0 then x / y else ~raise~('divide by zero')
+
+main ->
+  1.divide_by(0)
+
+=> \#error: divide by zero\</pre></div>
+
+  <p>
+    this simplistic function checks if the divisor is equal to <code>0</code> and raises an
+    exception if so. the function <code>raise()</code> terminates execution immediately and
+    unravels the function stack until it is <i>handled</i> or the program exits in error.
+  </p>
+
+  <p>
+    the familiar jvm <i>stack trace</i>, showing each function call in the chain of execution that
+    led to this exception, is generated properly by all loop programs. here's an example:
+  </p>
+  <div class="code">
+    <pre>java.lang.RuntimeException: ~divide by zero~
+    at prelude.raise(prelude.loop:9)
+    at _default.divide_by(test.loop:3)
+    at _default.main(test.loop:6)</pre></div>
+
+  <p>
+    by default, <code>raise()</code> throws a <code>java.lang.RuntimeException</code> with an
+    embedded cause message.
+    (this example presupposes that the <code>divide_by()</code> function is saved in a file called
+    <code>test.loop</code>, which is called from the command line using the loop runtime.)
+  </p>
+
+  <p>
+    otherwise, it is nice to see that the trace points correctly to the offending line of code,
+    line #3 in <code>test.loop</code>:
+  </p>
+  <div class="code">
+    <pre>java.lang.RuntimeException: divide by zero
+    at prelude.raise(prelude.loop:9)
+    ~at _default.divide_by(test.loop:3)~
+    at _default.main(test.loop:6)</pre></div>
+  <p>
+    you may also note that the stack trace is
+    clean, and only presents loop functions with none of the intermediate java gunk that other
+    jvm languages often leave behind.
+  </p>
+
+  <p>
+    of course, if your loop code calls third-party java methods you may see it after all ;)
+  </p>
+
+  <h3>Handling exceptions</h3>
+
+  <p>
+    exceptions in loop are handled via a specialization of pattern matching functions called
+    <i>handler</i> forms. these are pretty much just a normal pattern matching function, but with
+    some additional constraints imposed. let's try to handle the divide-by-zero error from the
+    previous example:
+  </p>
+
+  <div class="code">
+    <pre>divide_by(x, y) ~except handler~ ->
+  if y != 0 then x / y else raise('divide by zero')
+
+~handler~(e) =>
+  *      : e.message
+
+1.divide_by(0)
+
+=> divide by zero</pre></div>
+
+  <p>
+    there are a couple of changes we've made here. firstly, there is a new function simply called
+    <code>handler()</code> (you can call it whatever you want). secondly, we have added a clause
+    to the <code>divide_by()</code> function which reads <code>except handler</code>. this is the
+    exception handler clause which tells loop to catch exceptions thrown by the declaring function
+    and hand them off to the specified function for processing.
+  </p>
+
+  <p>
+    furthermore, we see that this time there is no error, instead we simply get back the message
+    <code>divide by zero</code>, which was extracted from the exception object itself:
+  </p>
+
+
+  <div class="code">
+    <pre>divide_by(x, y) except handler ->
+  if y != 0 then x / y else raise('divide by zero')
+
+handler(e) =>
+  *      : ~e.message~
+
+1.divide_by(0)
+
+=> ~divide by zero~</pre></div>
+
+  <p>
+    since the exception is passed as an argument to <code>handler()</code>, we can use pattern
+    matching to provide the appropriate recovery response. 
   </p>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
