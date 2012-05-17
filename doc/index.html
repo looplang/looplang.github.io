@@ -2112,8 +2112,63 @@ handler(e) =>
 => ~divide by zero~</pre></div>
 
   <p>
-    since the exception is passed as an argument to <code>handler()</code>, we can use pattern
-    matching to provide the appropriate recovery response. 
+    Since the exception is passed as an argument to <code>handler()</code>, we can use pattern
+    matching to provide the appropriate recovery response.
+  </p>
+  <p>
+    This lets you handle any exception thrown using <code>raise()</code>. You can even use guards
+    here to do interesting things:
+  </p>
+  <div class="code">
+    <pre>divide_by(x, y) except handler ->
+  if y != 0 then x / y else raise(~'dbz'~)
+
+handler(e) =>
+  { msg <- e.message }  | ~msg == 'dbz'~  : 0
+                        | else          : raise(e)
+
+1.divide_by(0)
+
+=> 0</pre></div>
+
+  <p>
+    Here we're using a combination of <i>object pattern matching</i> (see earlier section) and
+    guards to check if the exception contains a particular message. If it does, we return zero
+    as if nothing abnormal happened. Otherwise, the exception is rethrown.
+  </p>
+
+  <h3>Handling java exceptions</h3>
+
+  <p>
+    Of course, loop's simple exceptions aren't the only kind you'll have to deal with. Java
+    exceptions come in a variety of types that don't all extend from <code>RuntimeException</code>.
+    To handle these properly, we can use a <i>type pattern</i> rule:
+  </p>
+
+  <div class="code">
+    <pre>io_handler(e) =>
+  IOException      : e.message
+  *                : raise(e)</pre></div>
+
+  <p>
+    In this example, we're catching any instance of <code>IOException</code> and returning the
+    message. For all other kinds, we rethrow the exception. The wildcard rule will catch any
+    subtype of <code>java.lang.Exception</code> including all <code>RuntimeException</code>s.
+  </p>
+
+  <p>
+    Loop will correctly generate the Java bytecode to catch only the exceptions specified by
+    type pattern rules, <i>in the order</i> they are specified. So if you want to you can even
+    write:
+  </p>
+
+  <div class="code">
+    <pre>io_handler(e) =>
+  FileNotFoundException   : raise(e)
+  IOException             : e.message</pre></div>
+
+  <p>
+    This handler will rethrow the exception if
   </p>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
