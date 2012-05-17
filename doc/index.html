@@ -2168,7 +2168,449 @@ handler(e) =>
   IOException             : e.message</pre></div>
 
   <p>
-    This handler will rethrow the exception if
+    This handler will rethrow the exception if a file is not found, otherwise it simply returns
+    the error message, catching the exception. However, note that since we have only specified
+    two exception types, anything that's thrown of a <i>different</i> type, say
+    <code>NumberFormatException</code>, won't be caught or handled.
+  </p>
+  <p>
+    Loop is smart enough to catch only the specific exception types--note that there is no
+    catch/analyze/rethrow penalty, as the correct bytecode is generated underneath.
+  </p>
+
+  <p>
+    Please also remember that the wildcard rule will only catch <code>Exceptions</code>, not
+    <code>java.lang.Error</code>s or other types of <code>java.lang.Throwable</code>. If you wish
+    to catch these types, you must specify them explicitly:
+  </p>
+  <div class="code">
+    <pre>io_handler(e) =>
+  FileNotFoundException   : raise(e)
+  ~OutOfMemoryError        : exit(1)~
+  *                       : e.message</pre></div>
+
+  <h2>Classes and objects</h2>
+
+  <p>
+    In addition to working with Java classes and objects, Loop also provides its own, more ideal
+    type system. Classes in Loop are simple graphs of scalar data that have no private state and
+    no methods. Formally, they define a grouping of properties identified with a common purpose
+    or model. All properties are publicly accessible by all functions, if the class is also public.
+    You can think of Loop classes like <i>structs</i> in C or C#, or as a formalization of
+    the map data structure we encountered earlier.
+  </p>
+
+  <h3>Constructors</h3>
+
+  <p>
+    Loop objects are simply instances of these classes. They are created using the <code>new</code>
+    keyword and all have implicit constructors.
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  mass
+
+new Star()</pre></div>
+
+  <p>
+    This will create an empty object, which, is no different from the empty map:
+  </p>
+
+  <div class="code">
+    <pre>new Star() == {:}
+
+=> true</pre></div>
+
+  <p>
+    Like maps and Java objects, reading the properties of a Loop object is done via <i>dot-syntax</i>:
+  </p>
+
+  <div class="code">
+    <pre>star: new Star()
+~star.name~
+
+=> Nothing</pre></div>
+
+  <p>
+    Every Loop type automatically has a dynamic set of constructors for providing its initial set
+    of properties:
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  mass
+
+new Star(name: 'Proxima Centauri',
+         mass: 0.123)</pre></div>
+
+  <p>
+    Note that these are constructors that take <i>named arguments</i>. Each argument is tagged
+    with the name of the property for which you are specifying the value. This makes it clear
+    what you're passing in, when you have large constructors.
+  </p>
+
+  <p>
+    Of course, if you don't know a value at construction time, you can simply leave it out:
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  mass
+
+new Star(name: 'Proxima Centauri')</pre></div>
+
+  <p>
+    This object will return nothing when you query its mass property, but its name has been set.
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  mass
+
+star: new Star(name: 'Proxima Centauri')
+star.name
+~star.mass~
+
+=> Proxima Centauri
+=> Nothing</pre></div>
+
+  <p>
+    Setting (or re-setting) a property is also similar to maps and Java objects:
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  ~mass~
+
+star: new Star(name: 'Proxima Centauri')
+~star.name: 'Errai'~
+star.name
+
+=> Errai</pre></div>
+
+  <h3>Defaults</h3>
+
+  <p>
+    Loop has no explicit constructor function, instead if you want to specify certain default
+    values that are preset on all instances of a class, you can directly specify it in the class
+    definition:
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  ~mass: 0.123~
+
+star: new Star(name: 'Proxima Centauri')
+star.mass
+
+=> 0.123</pre></div>
+
+  <p>
+    Any expressions specified in the class definition will be evaluated along with the constructor
+    and stored in the appropriate property when the object is instantiated. You are free to invoke
+    methods or specify any other kind of expression here. The only restriction is that you may not
+    refer to other properties of the same object.
+  </p>
+
+  <div class="code">
+    <pre>class Star ->
+  name
+  default_mass: 0.123
+  \mass: default_mass\
+
+=> \#error\</pre></div>
+
+  <p>
+    If you want to share a value like this, you must specify it explicitly in a constructor.
+  </p>
+
+  <p>
+    While Loop objects resemble freeform hash-tables, there are some important restrictions:
+  </p>
+
+  <div>
+    <ul class="features">
+      <li><img src="../images/arrow_right.png" alt="bullet"> properties cannot be <i>deleted</i></li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> you cannot set functions in properties</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> you cannot set closures in properties</li>
+    </ul>
+  </div>
+
+  <h3>Immutability</h3>
+
+  <p>
+    Immutability, or the idea of an object whose structural data cannot change once created, is
+    a very important precept in any language that allows concurrency (multi-threaded programming).
+    Loop is no exception, in fact, since Loop has a strong focus on concurrency, immutability is
+    integrated into the core of the language itself.
+  </p>
+
+  <p>
+    Threads in Loop are not allowed to share mutable state (except via memory transactions, which
+    we'll see later). In order to allow them to share fixed state, however, Loop provides a special
+    construct: Immutable types.
+  </p>
+
+  <div class="code">
+    <pre>immutable class Star ->
+  name
+  mass
+
+star: new Star(name: 'Proxima Centauri',
+               mass: 0.123)
+star.name
+\star.name: 'Errai'\
+
+=> Proxima Centauri
+=> \#error\</pre></div>
+
+  <p>
+    Note the addition of a new keyword to the class definition: <code>immutable</code>. This tells
+    Loop that instances of class <code>Star</code> may not be altered after they are created. So
+    any properties <i>must</i> be set via the constructor call.
+  </p>
+
+  <p>
+    In this case, an attempt to mutate the value <code>name</code> resulted in a
+    <i>mutation error</i>. This ensures that we can share objects like this between threads, safely,
+    without worrying about their data becoming corrupt or inconsistent. We'll see how this is
+    done in much greater detail, in the section on <i>Concurrency</i>.
+  </p>
+
+  <h3>Duck typing</h3>
+
+  <p>
+    We've briefly seen that objects in Loop can be compared with maps in a compatible fashion. This
+    is part of a much broader feature known as <i>duck typing</i>. It involves the idea that an
+    object whose structure resembles that of another is equivalent to it.
+  </p>
+  <p>
+    Let's say we have a function that prints the name and age of a Star:
+  </p>
+
+  <div class="code">
+    <pre>name_age(star) ->
+  print("@{star.name} is @{star.age} years old")
+
+name_age(new Star(name: 'Proxima Centauri',
+                  age: 40000000))
+
+=> Proxima Centauri is 40000000 years old</pre></div>
+
+  <p>
+    Now, this function expects an argument called <code>star</code>, but really it expects any
+    object that has two properties: <code>name</code> and <code>age</code>. So we can easily write:
+  </p>
+
+  <div class="code">
+    <pre>class Person ->
+  name
+  age
+
+name_age(new Person(name: 'Nikola Tesla',
+                    age : 142))
+
+=> Nikola Tesla is 142 years old</pre></div>
+
+  <p>
+    This is completely legal and works as expected because of duck typing. In other words:
+  </p>
+
+  <blockquote>
+    if it walks, talks and quacks like a duck, it must be a duck.
+  </blockquote>
+
+  <h2>Java interop</h2>
+
+  <p>
+    As advertised, Loop interoperates tightly with Java. So far we've seen how to call instance
+    methods on Java objects and create new Java objects by calling their constructors. Let's take
+    a quick look at some other conveniences.
+  </p>
+
+  <h3>Static methods</h3>
+
+  <p>
+    Loop has a special syntax for referring to static methods of Java classes:
+  </p>
+
+  <div class="code">
+    <pre>~`java.lang.System`~.currentTimeMillis()
+
+=> 1337221827894</pre></div>
+
+  <p>
+    Note the backticks - <code>``</code> around the type reference to <code>java.lang.System</code>.
+    This tells loop that we are referring to a Java type and must resolve any method calls as a
+    static member of the class. The function <code>currentTimeMillis()</code> returns the current
+    system clock time in number of milliseconds since the beginning of the epoch.
+  </p>
+
+  <h3>Static fields</h3>
+
+  <p>
+    Class member (or static) fields are similarly resolved on Java types, but must be specified
+    using a special operator:
+  </p>
+  <div class="code">
+    <pre>~`java.lang.System::out`~.println('hi')
+
+=> hi</pre></div>
+
+  <p>
+    Notice the <code>::</code> operator which designates the name of the static field (in our case,
+    <code>out</code>). The entire field reference must appear <i>inside</i> the backticks and the
+    resolve field left to be evaluated against whatever expression you put around it. In this
+    example, I'm calling the method <code>println()</code> which simply outputs a string to the
+    console. In fact, this is exactly how Loop's own <code>print()</code> function works internally.
+  </p>
+
+  <h3>Type references</h3>
+
+  <p>
+    It is sometimes useful to resolve a Java class itself. Some libraries take classes as arguments,
+    or you just may want to ensure that a Java class is available in the current process. As you
+    might guess, you can refer to a Java type using the same backticks syntax we've seen so far:
+  </p>
+
+  <div class="code">
+    <pre>print(`java.util.Date`)
+
+=> java.util.Date</pre></div>
+
+  <p>
+    This is the equivalent of the following Java code fragment:
+  </p>
+
+  <div class="code">
+    <pre>System.out.println(java.util.Date.class)</pre></div>
+
+  <h2>Concurrency</h2>
+
+  <p>
+    Much of Loop's design is based around the idea that programs are increasingly running on
+    multiple CPUs (or cores) and that there is a pressing need for robust and simple tools to
+    create concurrent programs. Loop takes the position that these tools are best provided by
+    the language itself, and that the nitty-gritty of particular low-level concurrency constructs
+    (mutexes, semaphores, CAS instructions, etc.) should not intrude on everyday programming.
+  </p>
+
+  <p>
+    This is not to say that you should not familiarize yourself with these concepts, and know them
+    in reasonable detail, but that you should not have to work with them for most practical uses.
+    One analogy might be that while an astronaut should be reasonably familiar with the physics of
+    space flight, she should not have to work out the Newtonian propulsion equations to ignite each
+    stage of a rocket during flight. A lever or button would suffice.
+  </p>
+
+  <p>
+    There are two principal constructs in loop for working with concurrency: <i>channels and
+    memory (or cell) transactions</i>. Both are well-known, and well-established tools for
+    writing concurrent programs, but Loop takes them a step further and integrates them deeply
+    into the language itself, and with each other.
+  </p>
+
+  <h3>Channels and message-passing</h3>
+
+  <p>
+    You may be familiar with <i>message-passing</i> as a framework for coordination between
+    multiple concurrent processes. Many languages and libraries provide something like this.
+    The theory is that if concurrent processes only ever communicate by sending messages to each
+    other, then there is no shared mutable state, and limited potential for memory corruption,
+    deadlocks and starvation.
+  </p>
+
+  <h3>Channels</h3>
+
+  <p>
+    Channels are an abstraction over message passing and thread pools that allows you to work in
+    terms of events and event handling functions. A channel consists of an event queue and a
+    handler function, backed by a pool of threads. Let's take a look:
+  </p>
+
+  <div class="code">
+    <pre>require channels
+
+print_message(msg) =>
+  -1        : @shutdown
+  *         : print(msg)
+
+
+main ->
+  channel(@printer, print_message, {:}),
+  @printer.send(i) for i in [1..10],
+  @printer.send(-1)</pre></div>
+
+  <p>
+    The first thing you'll notice is that we're importing a module called <code>channels</code>;
+    this is a built-in module that ships with loop to provide all the concurrency tools you'll
+    need for working with channels.
+  </p>
+
+  <p>
+    Second, we have a pattern-matching function, <code>print_message()</code> that takes a single
+    argument and in the general case, just prints it out. If this argument is equal to
+    <code>-1</code>, however, the function returns a symbol named <code>@shutdown</code>. This is
+    a special symbol that the channels API recognizes and shuts down the channel.
+  </p>
+
+  <p>
+    Finally we have a few lines in <code>main()</code> to establish a channel and send it some
+    events to process:
+  </p>
+
+  <div class="code">
+    <pre>main ->
+  channel(@printer, print_message, {:}),
+  @printer.send(i) for i in [1..10],
+  @printer.send(-1)</pre></div>
+
+  <p>
+    Calling the function <code>channel()</code> establishes a channel called <i>printer</i>, whose
+    event function is <code>print_message()</code>. Any events received by this channel will be
+    dispatched to this function. Lastly, the empty map - <code>{:}</code> is used to say that we
+    want the default channel options (we'll see how to use some of these options later).
+  </p>
+
+  <p>
+    More generally, this function has the following signature:
+  </p>
+
+  <div class="code">
+    <pre>channel( < name >, < function >, < options > )</pre></div>
+
+  <div>
+    <ul class="features">
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>name</b> - a symbol naming the channel</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>function</b> - reference to a function to handle events</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>options</b> - a map of options for the new channel</li>
+    </ul>
+  </div>
+
+  <p>
+    Finally, to send events to the channel we've just created, we use the <code>send()</code>
+    function. This function takes two arguments, the name of the channel and a message to send.
+    This message can be any object, but it <i>must</i> be immutable. Loop will complain if you try
+    to send a mutable object to a channel.
+  </p>
+
+
+  <div class="code">
+    <pre>main ->
+  channel(@printer, print_message, {:}),
+  ~@printer.send(i) for i in [1..10]~,
+  @printer.send(-1)</pre></div>
+
+  <p>
+    When the messages arrive, they are dispatched as individual events to the event function. This
+    is
   </p>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
