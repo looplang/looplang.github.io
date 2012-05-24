@@ -12,7 +12,7 @@
   <h1>loop</h1>
   <nav>
     <a href="/about">About</a>
-    <a href="/#get-loop">Get Loop</a>
+    <a href="/doc#gettingstarted">Get Loop</a>
     <a href="/doc">Documentation</a>
     <a>FAQ</a>
     <a href="https://groups.google.com/group/looplang">Mailing List</a>
@@ -62,6 +62,26 @@
   <p>
     yes, but currently loop only optimizes <i>recursive</i> tail calls.
   </p>
+
+  <blockquote>
+    why did you create loop?
+  </blockquote>
+  <p>
+    read the <a href="/doc#philosophy">philosophy</a> section on the docs page.
+  </p>
+
+  <blockquote>
+    does loop's performance suffer because it is interpreted/on top of java?
+  </blockquote>
+  <p>
+    loop is neither interpreted nor run "on top of" java (there is a minimal runtime library).
+
+  </p>
+  <p>
+    programs are compiled directly to jvm bytecode, and this is done on-the-fly so there is no compile step and you
+    get all the quick turnaround benefits of interpreted code.
+  </p>
+
   <p>
     <i>
       Read more in the <a href="/doc">documentation</a> or ask on the

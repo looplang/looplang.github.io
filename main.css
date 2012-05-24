@@ -80,6 +80,46 @@ header nav > a {
   font-weight: lighter;
 }
 
+#outline-container {
+  position: fixed;
+  left: 510px;
+  top: 26px;
+  font-size: 12px;
+  color: #555;
+}
+
+#outline-container ul.outline {
+  padding: 0;
+}
+
+#outline-container ul.outline > li {
+  margin: 4px 0;
+}
+
+#outline-container ul {
+  list-style-type: none;
+}
+
+#outline-container a {
+  color: #555;
+  text-decoration: none;
+}
+
+#outline-container a:hover {
+  color: #333 !important;
+  text-decoration: underline;
+}
+
+#outline-container ul.outline ul a {
+  color: #777;
+}
+
+#outline-container ul.outline ul {
+  display: none;
+  padding-left: 20px;
+  padding-bottom: 4px;
+}
+
 .code {
   background-image: linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);
   background-image: -o-linear-gradient(top, rgb(246,246,246) 0%, rgb(243,243,243) 100%);

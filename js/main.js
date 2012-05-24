@@ -4,7 +4,7 @@
 
 var OPERATORS = ['->', '<-', '=>', 'and', 'or', 'not', 'class', 'if', 'then', 'else',
   'where', 'for', 'in', '==', '>=', '<=', 'true', 'false', 'except', 'immutable', 'require',
-  'module'];
+  'module', 'as'];
 
 (function() {
   var ops = OPERATORS;

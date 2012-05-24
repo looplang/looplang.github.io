@@ -6,117 +6,79 @@
   <link rel="stylesheet" href="../main.css">
   <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="../js/main.js"></script>
+  <script type="text/javascript">
+    function toIndexName(title) {
+      return title.replace(/[ ]+/, '')
+          .replace(/[&:\-!?]+/, '')
+          .toLowerCase();
+    }
+
+    $(function() {
+      // Construct nav index.
+      var topItems = $('#main > h2');
+      var outline = $('#outline-container > .outline');
+      outline.html('');
+      topItems.each(function() {
+        var subItems = ['<ul>'];
+        $(this).nextAll('*').each(function() {
+          // Read all nodes until we get to the next h2 tag.
+          var tag = $(this)[0].nodeName.toLowerCase();
+          if (tag == 'h2')
+            return false;
+          else if (tag != 'h3')
+            return true;
+
+          var name = toIndexName($(this).text());
+          // Drop an anchor near this section.
+          $(this).prepend('<a name="' + name + '"/>');
+
+          // Link to the relevant anchor
+          subItems.push('<li><a href="#' + name +'">');
+          subItems.push($(this).text());
+          subItems.push('</a></li>');
+        });
+        subItems.push('</ul>');
+
+        var name = toIndexName($(this).text());
+
+        // Drop anchor near this title.
+        $(this).prepend('<a name="' + name + '"/>');
+        outline.append('<li><a href="#' + name + '">' + $(this).text() + '</a>' + subItems.join('') + '</li>')
+      });
+
+      $('#outline-container > .outline > li > a').live('click', function() {
+        $(this).parent().find('ul').slideToggle();
+      }).first()
+        .click();
+    });
+  </script>
 </head>
 <body>
+<a name="#top"></a>
 <header>
   <h1>loop</h1>
   <nav>
     <a href="/about">About</a>
-    <a href="/#get-loop">Get Loop</a>
+    <a href="#gettingstarted">Get Loop</a>
     <a>Documentation</a>
     <a href="/faq">FAQ</a>
     <a href="https://groups.google.com/group/looplang">Mailing List</a>
   </nav>
 </header>
 <section id="main">
-  <blockquote>
-    manual
-  </blockquote>
 
-  <div>
-    <ul class="outline">
-      <li><a name="#introduction">Introduction</a>
-        <ul>
-          <li><a name="#get-loop">Getting started</a></li>
-          <li><a name="#first-loop">My first loop</a></li>
-          <li><a name="#evaluation">Evaluation</a></li>
-          <li><a name="#prog-structure">Program structure</a></li>
-        </ul>
-      </li>
-      <li><a name="#data-structures">Data structures</a>
-        <ul>
-          <li><a name="#lists">Lists & sets</a></li>
-          <li><a name="#maps">Maps</a></li>
-          <li><a name="#trees">Trees</a></li>
-        </ul>
-      </li>
-      <li><a name="#basic-exprs">Basic expressions</a>
-        <ul>
-          <li><a name="#strings">Strings</a></li>
-          <li><a name="#numbers">Numbers</a></li>
-          <li><a name="#operators">Operators</a></li>
-          <li><a name="#new-objects">Navigating Objects</a></li>
-          <li><a name="#if-then-else">If/Then/Else</a></li>
-          <li><a name="#list-comp">List comprehension</a></li>
-          <li><a name="#list-filter">List filtering</a></li>
-          <li><a name="#list-slices">List slices</a></li>
-          <li><a name="#null-safety">Null-safety</a></li>
-        </ul>
-      </li>
-      <li><a name="#functions">Functions</a>
-        <ul>
-          <li><a name="#simple-funcs">Simple functions</a></li>
-          <li><a name="#recursion">Recursion</a></li>
-          <li><a name="#where-block">Local scope</a></li>
-          <li><a name="#closures">Closures</a></li>
-          <li><a name="#call-as-method">Call as method</a></li>
-        </ul>
-      </li>
-      <li><a name="#pattern-funcs">Pattern matching functions</a>
-        <ul>
-          <li><a name="#pattern-literals">Literals</a></li>
-          <li><a name="#pattern-lists">Lists</a></li>
-          <li><a name="#pattern-strings">Strings & Regexes</a></li>
-          <li><a name="#pattern-objects">Objects</a></li>
-          <li><a name="#pattern-guards">Guards</a></li>
-          <li><a name="#pattern-examples">Examples</a></li>
-        </ul>
-      </li>
-      <li><a name="#cflow">Control flow</a>
-        <ul>
-          <li><a name="#exceptions">Exceptions</a></li>
-          <li><a name="#except-handling">Handler functions</a></li>
-        </ul>
-      </li>
-      <li><a name="#classes-objects">Classes & objects</a>
-        <ul>
-          <li><a name="#objects">Defaults</a></li>
-          <li><a name="#classes">Constructors</a></li>
-          <li><a name="#immutability">Immutability</a></li>
-          <li><a name="#manipulating-objects">Manipulating objects</a></li>
-          <li><a name="#duck-typing">Duck typing</a></li>
-        </ul>
-      </li>
-      <li><a name="#modules">Modules & Import</a>
-        <ul>
-          <li><a name="#imports">Importing</a></li>
-          <li><a name="#require-as">Import collisions</a></li>
-          <li><a name="#basic-mods">First module</a></li>
-          <li><a name="#core-libs">Bundled modules</a></li>
-          <li><a name="#hierarchical-mods">Hierarchical modules</a></li>
-        </ul>
-      </li>
-      <li><a name="#java-interop">Java Interop</a>
-        <ul>
-          <li><a name="#java-instance">Calling instance methods</a></li>
-          <li><a name="#java-static">Calling static methods</a></li>
-          <li><a name="#java-props">Getters & Setters</a></li>
-          <li><a name="#java-types">Type references</a></li>
-        </ul>
-      </li>
-      <li><a name="#concurrency">Concurrency</a>
-        <ul>
-          <li><a name="#message-passing">Channels & Message Passing</a></li>
-          <li><a name="#serial-channels">Serialized channels</a></li>
-          <li><a name="#conc-channels">Concurrent channels</a></li>
-          <li><a name="#channel-memory">Channel memory</a></li>
-          <li><a name="#stm">Shared memory & transactions</a></li>
-        </ul>
-      </li>
-    </ul>
+  <div id="outline-container">
+    <h3><a href="#top">Index</a></h3>
+    <ul class="outline"></ul>
   </div>
 
   <h2>Introduction</h2>
+  <h3>Philosophy</h3>
+
+  <p>
+    Stuff.
+  </p>
+
   <h3>Getting started</h3>
   <p>
     you will need java 1.6 or higher already installed. check if you have it by running:
@@ -145,8 +107,8 @@ Java HotSpot(TM) 64-Bit Server VM</pre>
 
 >> ~1 + 2 + 4~
 7
->> ~alert('hi there')~
->> ~:help~
+>> ~alert('hi there') ~
+>> :help
 </pre>
   </div>
 
@@ -184,6 +146,13 @@ print(new java.util.Date())</pre>
 
     as you will learn soon, everything in loop is designated in terms of functions
     and values.
+  </p>
+
+  <p>
+    You should be able to run all of the example code in this documentation via this method (loop
+    program files) or via the loop shell itself. I recommend starting with the shell and moving
+    to program files when working with more complex examples (particularly when declaring your
+    own functions, etc.).
   </p>
 
 
@@ -2503,17 +2472,237 @@ name_age(new Person(name: 'Nikola Tesla',
   </p>
 
   <p>
-    The process of bringing in such a module for use in your program is called <code>importing</code>.
+    The process of making such a module available for use in your program is called <code>importing</code>.
     In Loop, you use the <code>require</code> keyword to import a module by name:
   </p>
 
 
   <div class="code">
-    <pre>require dep
+    <pre>require file
 
-some_function()</pre></div>
+print(read('file.txt'))</pre></div>
 
-  Here, the module <code>dep</code> is present
+  <p>
+    Here, the module <code>file</code> is <i>imported</i> for use by our program. It provides the
+    function <code>read()</code>, and we can thus use it without declaring it specially. This
+    function reads the contents of a file named <code>autobots.txt</code> and returns a string.
+  </p>
+
+
+  <div class="code">
+    <pre>require file
+
+print(~read('autobots.txt')~)</pre></div>
+
+  <p>
+    Go ahead and create yourself a text file (in any editor) with a list of autobots and run
+    the program. For me this prints out:
+  </p>
+
+
+  <div class="code">
+    <pre>Hot Rod
+Arcee
+Ironhide
+Perceptor
+Optimus Prime</pre></div>
+
+  <p>
+    Nice! We didn't have to call any Java code or define any additional functions. The <code>file</code>
+    module did all the work for us. This module ships with loop, and is part of its <i>core library</i>.
+    It provides many other functions useful for manipulating and working with files.
+  </p>
+
+  <p>
+    Now, all the functions in the file module are available in your program. However, this can present
+    a problem if we already have functions with the same names. Let's take <code>read</code> as an
+    example:
+  </p>
+
+
+  <div class="code">
+    <pre>require file
+
+~read(val)~ =>
+  /[0-9]+/    : val.to_integer()
+  *           : val
+
+print(read('autobots.txt'))
+
+=> \autobots.txt\</pre></div>
+
+  <p>
+    Now we have declared a function that converts strings to integers that is also called
+    <code>read()</code>. When we run the program, we dont get any errors, rather we get the
+    wrong behavior. One way to fix this problem is to rename our function to something like
+    <code>@read()</code>, but this is not a great solution. Both functions are legitimately called
+    <code>read()</code> and there is no reason why one should have to give up the name to the
+    other.
+  </p>
+
+  <p>
+    Loop provides a feature known as <i>import aliasing</i> to solve this problem:
+  </p>
+
+
+  <div class="code">
+    <pre>require file as f
+
+read(val) =>
+  /[0-9]+/    : val.to_integer()
+  *           : val
+
+print(f.read('autobots.txt'))</pre></div>
+
+  <p>
+    In this example, we have added a suffix to the require declaration, <code>as f</code>. This
+    tells Loop to box all the functionality in module file into a <i>namespace</i> called
+    <code>f</code> (you can call this whatever you like, even <code>file</code>). Now, when we use
+    functions from the <code>file</code> module, we prefix the function call with the alias:
+  </p>
+
+  <div class="code">
+    <pre>require file as ~f~
+
+read(val) =>
+  /[0-9]+/    : val.to_integer()
+  *           : val
+
+print(~f.read~('autobots.txt'))
+
+=> Hot Rod
+=> Arcee
+=> Ironhide
+=> Perceptor
+=> Optimus Prime</pre></div>
+
+
+  <p>
+    Now when we run the program, Loop correctly resolves the <code>read()</code> function against
+    module <code>file</code> and we get our desired list of autobots.
+  </p>
+
+  <h3>First module</h3>
+
+  <p>
+    So far, all the programs we've written have not been in any particular module. By default,
+    Loop puts your program into a module called <code>_default</code> (inside the Loop shell, this
+    is the <code>_shell</code> module). This is a convenience that works well for a small script,
+    but isn't really practical once you have an application consisting of several interacting
+    loop scripts.
+  </p>
+
+  <p>
+    To name your module, place a module declaration at the very top of the script:
+  </p>
+
+  <div class="code">
+    <pre>~module botreader~
+
+require file as f
+
+read(val) =>
+  /[0-9]+/    : val.to_integer()
+  *           : val
+
+run ->
+  print(f.read('autobots.txt'))</pre></div>
+
+  <p>
+    Here, we've taken the last example and added a module declaration. To make this work properly,
+    you <i>must</i> save this file as <code>botreader.loop</code>. The module name must match the
+    file name in most cases (there are some exceptions which we will look at later).
+  </p>
+
+  <p>
+    Now we can <i>use</i> the <code>botreader</code> module from other loop programs, easily:
+  </p>
+
+  <div class="code">
+    <pre>require botreader
+
+run()
+
+=> Hot Rod
+=> Arcee
+=> Ironhide
+=> Perceptor
+=> Optimus Prime</pre></div>
+
+  <p>
+    Note that this only works if both loop scripts are in the same directory. Modules bundled
+    with loop (such as <code>file</code>) or in <i>packages</i> do not need to be in the
+    same directory. We'll see what this means in the next section.
+  </p>
+
+  <h3>Packaging</h3>
+
+  <p>
+    To be documented.
+  </p>
+
+  <h3>Prelude module</h3>
+
+  <p>
+    In a lot of these examples, we've used functions like <code>print()</code> and <code>last()</code>
+    quite liberally. These are not declared anywhere, nor are we explicitly importing them from
+    any module with a require directive. How then are they popping up in our code?
+  </p>
+
+  <p>
+    The answer is the <i>prelude</i> module. All Loop programs implicitly import a built-in module
+    called <code>prelude</code>, which provides a bunch of common functionality for convenience.
+    These are some of the functions that are part of prelude:
+  </p>
+
+  <h4>General functions</h4>
+
+  <div>
+    <ul class="features">
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>print()</b> - writes a value to the console</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>alert()</b> - shows a popup dialog with given text</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>to_integer()</b> - converts a string with numbers to an integer</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>embiggen()</b> - converts numbers to greater precision</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>exit()</b> - terminates the program execution</li>
+    </ul>
+
+    <h4>List & String functions</h4>
+    <ul class="features">
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>last()</b> - returns the last item in a list or string</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>push()</b> - adds a value to the end of a list</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>pop()</b> - removes and returns the last item in a list</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>head()</b> - returns the first item in a list</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>tail()</b> - returns a slice of the list with all items after the head</li>
+      <li><img src="../images/arrow_right.png" alt="bullet"> <b>reverse()</b> - returns a copy of the list with items in reverse order</li>
+    </ul>
+  </div>
+
+  <p>
+    You can inspect the full source code of the prelude module here:
+    <a target="_blank" href="https://github.com/dhanji/loop/blob/master/resources/loop/lang/prelude.loop">https://github.com/dhanji/loop/blob/master/resources/loop/lang/prelude.loop</a>
+  </p>
+
+  <p>
+    Just as we saw with the file module and our custom <code>read()</code> function, you can also
+    have collisions with the prelude module. While you can't prevent the import of prelude, you
+    can definitely <i>alias</i> it to prevent function name collisions.
+  </p>
+
+  <div class="code">
+    <pre>require prelude as ~pre~
+
+print(val) ->
+  ~pre.print~(val.toUpperCase())
+
+print('hi there')
+
+=> HI THERE</pre></div>
+
+  <h3>Hierarchical modules</h3>
+
+  <p>
+    To be documented.
+  </p>
 
   <h2>Concurrency</h2>
 
