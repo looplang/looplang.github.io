@@ -2193,9 +2193,9 @@ handler(e) =>
 
   <p>
     In addition to working with Java classes and objects, Loop also provides its own, more ideal
-    type system. Classes in Loop are simple graphs of scalar data that have no private state and
+    type system. Classes in Loop are simple graphs of data that have no private state and
     no methods. Formally, they define a grouping of properties identified with a common purpose
-    or model. All properties are publicly accessible by all functions, if the class is also public.
+    or model. All properties are publicly accessible by all functions.
     You can think of Loop classes like <i>structs</i> in C or C#, or as a formalization of
     the map data structure we encountered earlier.
   </p>
@@ -2249,7 +2249,7 @@ new Star(name: 'Proxima Centauri',
   <p>
     Note that these are constructors that take <i>named arguments</i>. Each argument is tagged
     with the name of the property for which you are specifying the value. This makes it clear
-    what you're passing in, when you have large constructors.
+    what you're passing in when you have large constructors.
   </p>
 
   <p>
@@ -2264,7 +2264,8 @@ new Star(name: 'Proxima Centauri',
 new Star(name: 'Proxima Centauri')</pre></div>
 
   <p>
-    This object will return nothing when you query its mass property, but its name has been set.
+    This object will return nothing when you query its <code>mass</code> property, but its
+    <code>name</code> has been set.
   </p>
 
   <div class="code">
@@ -2280,7 +2281,7 @@ star.name
 => Nothing</pre></div>
 
   <p>
-    Setting (or re-setting) a property is also similar to maps and Java objects:
+    Setting (or re-setting) a property is done with the assign operator:
   </p>
 
   <div class="code">
@@ -2332,7 +2333,7 @@ star.mass
   </p>
 
   <p>
-    While Loop objects resemble freeform hash-tables, there are some important restrictions:
+    While Loop objects resemble freeform maps, there are some important restrictions:
   </p>
 
   <div>
@@ -2348,14 +2349,14 @@ star.mass
   <p>
     Immutability, or the idea of an object whose structural data cannot change once created, is
     a very important precept in any language that allows concurrency (multi-threaded programming).
-    Loop is no exception, in fact, since Loop has a strong focus on concurrency, immutability is
+    Loop is no exception. In fact, since Loop has a strong focus on concurrency, immutability is
     integrated into the core of the language itself.
   </p>
 
   <p>
     Threads in Loop are not allowed to share mutable state (except via memory transactions, which
-    we'll see later). In order to allow them to share fixed state, however, Loop provides a special
-    construct: Immutable types.
+    we'll see later). In order to allow them to share fixed data, however, Loop provides a special
+    construct called <i>immutable types</i>.
   </p>
 
   <div class="code">
@@ -2374,7 +2375,7 @@ star.name
   <p>
     Note the addition of a new keyword to the class definition: <code>immutable</code>. This tells
     Loop that instances of class <code>Star</code> may not be altered after they are created. So
-    any properties <i>must</i> be set via the constructor call.
+    any properties <i>must</i> be set via the constructor.
   </p>
 
   <p>
@@ -2424,14 +2425,15 @@ name_age(new Person(name: 'Nikola Tesla',
   </p>
 
   <blockquote>
-    if it walks, talks and quacks like a duck, it must be a duck.
+    if it walks, talks and quacks like a duck, then it is in fact, a duck.
   </blockquote>
 
   <h2>Java interop</h2>
 
   <p>
-    As advertised, Loop interoperates tightly with Java. So far we've seen how to call instance
-    methods on Java objects and create new Java objects by calling their constructors. Let's take
+    As said earlier, Loop interoperates well with Java. So far we've seen how to call instance
+    methods on Java objects seamlessly; and create new Java objects by calling their constructors.
+    Now let's take
     a quick look at some other conveniences.
   </p>
 
@@ -2467,7 +2469,7 @@ name_age(new Person(name: 'Nikola Tesla',
   <p>
     Notice the <code>::</code> operator which designates the name of the static field (in our case,
     <code>out</code>). The entire field reference must appear <i>inside</i> the backticks and the
-    resolve field left to be evaluated against whatever expression you put around it. In this
+    resolved field left to be evaluated against whatever expression you put around it. In this
     example, I'm calling the method <code>println()</code> which simply outputs a string to the
     console. In fact, this is exactly how Loop's own <code>print()</code> function works internally.
   </p>
@@ -2491,6 +2493,27 @@ name_age(new Person(name: 'Nikola Tesla',
 
   <div class="code">
     <pre>System.out.println(java.util.Date.class)</pre></div>
+
+  <h2>Modules</h2>
+
+  <p>
+    Modules in Loop are ways of packaging and shipping utility programs for use with other Loop
+    programs. Modules may also be used as a simple way of organizing a large project and are
+    usually composed of cohesive groups of functions and classes.
+  </p>
+
+  <p>
+    The process of bringing in such a module for use in your program is called <code>importing</code>.
+    In Loop, you use the <code>require</code> keyword to import a module by name:
+  </p>
+
+
+  <div class="code">
+    <pre>require dep
+
+some_function()</pre></div>
+
+  Here, the module <code>dep</code> is present
 
   <h2>Concurrency</h2>
 
@@ -2531,8 +2554,8 @@ name_age(new Person(name: 'Nikola Tesla',
 
   <p>
     Channels are an abstraction over message passing and thread pools that allows you to work in
-    terms of events and event handling functions. A channel consists of an event queue and a
-    handler function, backed by a pool of threads. Let's take a look:
+    terms of events and event handling functions. A channel consists of an <i>event queue</i> and a
+    <i>handler function</i>, backed by a pool of threads. Let's take a look:
   </p>
 
   <div class="code">
@@ -2558,7 +2581,7 @@ main ->
     Second, we have a pattern-matching function, <code>print_message()</code> that takes a single
     argument and in the general case, just prints it out. If this argument is equal to
     <code>-1</code>, however, the function returns a symbol named <code>@shutdown</code>. This is
-    a special symbol that the channels API recognizes and shuts down the channel.
+    a special symbol that the channels API recognizes and responds by shutting down the channel.
   </p>
 
   <p>
@@ -2568,7 +2591,7 @@ main ->
 
   <div class="code">
     <pre>main ->
-  channel(@printer, print_message, {:}),
+  ~channel(@printer, print_message, {:}),~
   @printer.send(i) for i in [1..10],
   @printer.send(-1)</pre></div>
 
@@ -2610,8 +2633,251 @@ main ->
 
   <p>
     When the messages arrive, they are dispatched as individual events to the event function. This
-    is
+    is done in a fair manner over a thread pool that is shared between all channels. Note that in
+    this example, I'm sending a sequence of numbers from 1 to 10, individually.
   </p>
+
+  <p>
+    This produces the following output:
+  </p>
+
+
+  <div class="code">
+    <pre>6
+4
+3
+2
+9
+5
+7
+8
+10
+1</pre></div>
+
+  <p>
+    The numbers appear in a random order, which might be surprising, but in fact this is channel
+    <i>fairness</i> in action. When we send the 10 numbers, they get pumped into the channel's
+    event queue, and then the channel's event function goes hell for leather trying to process
+    the queue. Since these events are being processed in parallel, the order of
+    output is unpredictable (and random).
+  </p>
+
+  <h3>Serialized channels</h3>
+
+  <p>
+    If we take the previous example, and make one small change to the channel options:
+  </p>
+
+  <div class="code">
+    <pre>require channels
+
+print_msg(msg) =>
+  -1        : @shutdown
+  *         : print(msg)
+
+
+main ->
+  channel(@printer, print_msg, { @serialize : true }),
+  @printer.send(i) for i in [1..10],
+  @printer.send(-1)</pre></div>
+
+  <p>
+    Then we get the following output instead:
+  </p>
+
+  <div class="code">
+    <pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div>
+
+  <p>
+    Perfectly ordered. This is because we specified that the channel is a <i>serialized</i> channel,
+    meaning that events are dispatched exactly one at a time. Even if there are many threads
+    available in the worker pool, a serialized channel will only use a maximum of one thread
+    ensuring that all events in its queue are processed <i>serially</i>.
+  </p>
+
+  <p>
+    This is an extremely useful design pattern, particularly when you are dealing with large numbers
+    of users, for example. Since channels are lightweight (much lighter-weight than threads), you
+    can allocate one channel per user and fire off events as they arrive. You don't have to worry
+    about synchronizing code for a single user, because the serialized channel ensures that it
+    happens in sequence.
+  </p>
+
+  <p>
+    Channels can be shutdown and re-established as many times as you like. But it is recommended
+    that you hold a channel open for the lifetime of the application. Coordinating their orderly
+    shutdown and restart in the middle of a program's life can be tricky, so only do it if you
+    really have no other way.
+  </p>
+
+  <h3>Channel memory</h3>
+
+  <p>
+    Serialized channels also provide the ability to keep some data around for the next event that
+    arrives. This allows you to accumulate state incrementally as each event arrives and use this
+    for internal processing. Since this state is mutable (i.e. you can modify it), it is only
+    visible inside the channel. Here's an example of a simple counter using serialized channels
+    and memory:
+  </p>
+
+  <div class="code">
+    <pre>require channels
+
+increment(msg) =>
+  -1        : @shutdown
+  @print    : print(mem[@count])
+  *         : mem[@count] = mem[@count] + 10
+  where
+    mem     : ~channel_memory()~
+
+
+main ->
+  channel(@printer, increment, { @serialize : true }),
+  @printer.send(i) for i in [1..10],
+  @printer.send(@print),
+  @printer.send(-1)</pre></div>
+
+  <p>
+    Notice the function <code>channel_memory()</code>, which obtains a reference to the current
+    channel's memory. We save this to a local reference, <code>mem</code> for easy access.
+  </p>
+  <p>
+    Now, we've changed the printer slightly from the previous iteration, instead of merely
+    printing the message, we increment a counter (a slot in <code>mem</code> called
+    <code>@count</code>) by 10 each time.
+  </p>
+  <p>
+    Finally, before shutting down, we send a special message <code>@print</code>, which just dumps
+    the value of <code>@count</code> in the channel memory to the console. Running this function
+    produces:
+  </p>
+
+  <div class="code">
+    <pre>100</pre></div>
+
+  <p>
+    You can store anything you like in channel memory, it acts just like a map. And the data will
+    stick around until you either set it to <code>Nothing</code> or shut down the channel. But
+    remember that this will not be accessible in <i>other</i> channels or even in <code>main()</code>:
+  </p>
+
+  <div class="code">
+    <pre>require channels
+
+increment(msg) =>
+  -1        : @shutdown
+  @print    : print(mem[@count])
+  *         : mem[@count] = mem[@count] + 10
+  where
+    mem     : channel_memory()
+
+
+main ->
+  channel(@printer, increment, { @serialize : true }),
+  @printer.send(i) for i in [1..10],
+  print(\channel_memory()\.count)
+  @printer.send(-1)
+
+=> \#error: illegal shared memory request\</pre></div>
+
+  <p>
+    Of course, each serialized channel gets its own channel memory, so whatever data you set in
+    one serialized channel won't be available in another serialized channel's memory either.
+  </p>
+
+  <h3>Concurrent channels</h3>
+
+  <p>
+    Let's go back to non-serialized (or <i>concurrent</i>) channels. These run as fast as possible
+    and in parallel with one another. It is important to remember they have <i>no channel memory</i>.
+    If you want to keep state around and modify it in parallel you'll have to use
+    <i>cell transactions</i>, which we'll look at later.
+  </p>
+
+  <p>
+    Now, all channels run on the same shared thread pool. This thread pool starts with a small
+    number of threads and expands with the rate of events being sent to all channels. If a particular
+    (concurrent) channel is receiving too many messages and using up the majority of threads, the
+    Loop runtime will attempt to balance the workload by making busy channels yield some time.
+  </p>
+
+  <p>
+    However, it is not always desirable to rely on this--the yielding only occurs between
+    events, and you may wish to have a more rigid (or dedicated) balance of threads per channel.
+    Loop allows any concurrent channel to have its own dedicated worker thread pool by specifying
+    the <code>workers</code> configuration option:
+  </p>
+
+
+  <div class="code">
+    <pre>require channels
+
+print_msg(msg) =>
+  -1        : @shutdown
+  *         : print(msg)
+
+
+main ->
+  channel(@printer, print_msg, { @workers : 4 }),
+  @printer.send(i) for i in [1..10],
+  @printer.send(-1)</pre></div>
+
+  <p>
+    Here, I'm ensuring that channel <code>printer</code> gets its own dedicated thread pool
+    consisting of 4 worker threads. All events sent to this channel will then be dispatched only
+    on this thread pool. Note that you can simulate a serialized channel by specifying only 1
+    worker:
+  </p>
+
+
+  <div class="code">
+    <pre>require channels
+
+print_msg(msg) =>
+  -1        : @shutdown
+  *         : print(msg)
+
+
+main ->
+  channel(@printer, print_msg, { ~@workers : 1~ }),
+  @printer.send(i) for i in [1..10],
+  @printer.send(-1)</pre></div>
+
+  <p>
+    Then the output produced is:
+  </p>
+
+  <div class="code">
+    <pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div>
+
+  <p>
+    This incidentally ensures that only one event gets processed at a time, which is similar to what
+    we saw with serialized channels. Of course serialized channels are much more sophisticated
+    than this--they have channel memory, and consume less resources, balancing fairly on the
+    global thread pool, but it is still an interesting similarity.
+  </p>
+
+  <h3>Cells and memory transactions</h3>
+
+  <p>To be done. This feature is still a WIP and will be documented when complete.</p>
 
   <section id="copyright">&copy; 2012 by <a href="http://rethrick.com/about">Dhanji R. Prasanna</a>.
     Some rights reserved.</section>
