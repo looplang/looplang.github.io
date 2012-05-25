@@ -52,6 +52,17 @@
         .click();
     });
   </script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24538005-4']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </head>
 <body>
 <a name="#top"></a>
@@ -73,10 +84,49 @@
   </div>
 
   <h2>Introduction</h2>
+
   <h3>Philosophy</h3>
 
   <p>
-    Stuff.
+    As a programming language, Loop prizes a readable, compact and elegant syntax.
+    Many design choices are made in favor of clarity over convenience.
+  </p>
+  <p>
+    The influences of
+    Haskell, Scheme, Ruby and Erlang are all present and Loop attempts to use familiar constructs wherever possible.
+  </p>
+
+  <p>
+    Loop also emphasizes <i>performance over purity</i> or theoretical considerations.
+    This means that practical design choices generally rule the day. One of the key motivations behind running on the
+    JVM is the vast array of existing libraries that are instantly available; and of course the
+    outstanding performance of a VM techonology developed over decades, that runs easily on multiple platforms.
+  </p>
+  <p>Programs (or scripts) are compiled
+    on-the-fly to optimized JVM bytecode and therefore suffer no performance penalty to interpretation;
+    all while maintaining the quick, edit-and-run responsiveness of interpreted code.
+  </p>
+
+  <p>
+    The overall philosophy is to bring together the best features of functional programming
+    with the practical and ease-of-use lessons in modern imperative and OO languages, but to do so
+    in a comprehensive and consistent manner. It has also
+    been designed with concurrency in mind right from the start.
+  </p>
+  <p>
+    Sometimes new languages feel like an endless agglomeration of features,
+    a niche satisfier, or just plain bolted-on, even if they have excellent ideas.
+    Loop's approach is to balance such new ideas with performance considerations
+    and present them in a consistent, pragmatic and elegant form.
+  </p>
+
+  <p>
+    Being functional in nature, the language doesn't have any of the baggage of the host platform (Java), but borrows
+    <a href="#callingfunctions">semantically</a> and interoperates where appropriate.
+  </p>
+
+  <p>
+    Loop is currently a work-in-progress, I invite you to come and play.
   </p>
 
   <h3>Getting started</h3>
@@ -111,6 +161,23 @@ Java HotSpot(TM) 64-Bit Server VM</pre>
 >> :help
 </pre>
   </div>
+
+  <p>
+    If you want to run loop from other directories, add loop to the <code>PATH</code>.
+    If using the bash shell:
+  </p>
+
+  <div class="code">
+<pre>$ export PATH=$PATH:/path/to/loop
+$ loop
+</pre>
+  </div>
+  <p><i>Note: make sure you replace <code>/path/to</code> with the actual path =)</i></p>
+
+  <p>
+    You can make this permanent by adding the aforementioned <code>export</code> line to
+    <code>.bash_profile</code> located in your home directory (if using bash).
+  </p>
 
   <h3>My first loop</h3>
   <p>
