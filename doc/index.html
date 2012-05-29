@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>loop documentation</title>
+  <title>Loop programmer's manual</title>
 
   <link rel="stylesheet" href="../main.css">
   <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
@@ -85,6 +85,22 @@
 
   <h2>Introduction</h2>
 
+  <p>
+    Welcome to Loop! Thanks for checking out my little research project. This is the programmer's
+    manual, you should be able to see an index of contents on your right.
+  </p>
+  <p>
+    Enjoy your stay.
+  </p>
+  <p>
+    <i>A quick note:
+    Please
+    remember that while there are hundreds of tests covering the language runtime, Loop is still
+    a young project and there may be errors you run into along the way--especially with the shell.
+    Any help in reporting them (on the <a href="https://groups.google.com/group/looplang">Mailing List</a>) or fixing them (by
+    <a href="https://github.com/dhanji/loop/">submitting patches</a>) is greatly appreciated. </i>
+  </p>
+
   <h3>Philosophy</h3>
 
   <p>
@@ -132,18 +148,26 @@
 
   <h3>Getting started</h3>
   <p>
-    You will need java 1.6 or higher already installed. Check if you have it by running:
+    You will need Java 1.6 or higher already installed. Check if you have it by running:
   </p>
   <div class="code">
-<pre>$ ~java -version~
-java version "1.6.0_31"
+<pre>$ ~Java -version~
+Java version "1.6.0_31"
 Java(TM) SE Runtime Environment
 Java HotSpot(TM) 64-Bit Server VM</pre>
   </div>
 
   <p>
-    Download and unzip the <a href="http://github.com/dhanji/loop">Loop distribution</a>. From the directory you unzipped
-    it into, run:
+    Download and unzip the <a href="https://github.com/dhanji/loop/tree/master/dist">Loop distribution</a>.
+    If using a *-nix operating system (Unix, Linux or Mac OS), in a terminal run:
+  </p>
+  <div class="code">
+    <pre>$ ~tar zxvf loop.tar.gz~
+$ cd loop</pre>
+  </div>
+
+  <p>
+    From the "loop" directory (created after unzipping), run:
   </p>
   <div class="code">
 <pre>$ ~./loop~</pre>
@@ -188,7 +212,7 @@ $ loop
   </p>
 
   <div class="code">
-<pre>$ java -jar loop.jar</pre>
+<pre>$ Java -jar loop.jar</pre>
   </div>
 
 
@@ -218,7 +242,7 @@ hello there
   <div class="code">
     <pre>print(1 + 2)
 print(5 * 50 / 44)
-print(new java.util.Date())</pre>
+print(new Java.util.Date())</pre>
   </div>
   <p>
     These are called <i>free expressions</i> and may appear anywhere inside a loop function or
@@ -334,7 +358,7 @@ print('mymodule is go!')
   <p>
     A module declaration appears at the top (usually this is the name of the loop file without the
     <code>.loop</code> extension), followed by <code>require</code> statements that import other
-    modules or java types.
+    modules or Java types.
   </p>
   <p>
     Loop type and function definitions come next and may be mixed,
@@ -348,7 +372,7 @@ print('mymodule is go!')
   </p>
   <h2>Data structures</h2>
   <p>
-    In addition to any available java data structures and types, there are a few built-in types
+    In addition to any available Java data structures and types, there are a few built-in types
     in Loop.
   </p>
 
@@ -406,7 +430,7 @@ greet('Dhanji')</pre>
     </ul>
   </div>
   <p>
-    Loop has no support for floats, shorts or bytes, however these may be manipulated using java
+    Loop has no support for floats, shorts or bytes, however these may be manipulated using Java
     primitive wrapper types if needed. By default, any integer appearing in a Loop program is
     treated as a 32-bit <code>Integer</code>
   </p>
@@ -533,7 +557,7 @@ print(@2.3129038102938102938102938)
 
   <p>
     Lists are an essential component of programming in Loop, as as such they are supported
-    natively in syntax. All loop lists are perfectly compatible with <code>java.util.List</code>
+    natively in syntax. All loop lists are perfectly compatible with <code>Java.util.List</code>
     and like <code>String</code>, come with some nifty, loop-specific extensions.
   </p>
   <p>
@@ -601,7 +625,7 @@ pick(~[1..7]~)    # generate a list of 1-7
 
 => {1, 2, 3}</pre></div>
   <p>
-    Loop sets are fully compatible with <code>java.util.Set</code> classes.
+    Loop sets are fully compatible with <code>Java.util.Set</code> classes.
   </p>
 
   <h3>Maps</h3>
@@ -672,14 +696,14 @@ starkify({ 'name' : 'Tyrion'})
   </p>
 
   <p>
-    Like sets and lists, maps are also fully compatible with java's <code>java.util.Map</code>
+    Like sets and lists, maps are also fully compatible with Java's <code>Java.util.Map</code>
     type.
   </p>
 
   <h3>Trees</h3>
   <p>
     Like sets are to lists, loop provides a simple syntactic abstraction to represent binary trees.
-    A binary tree in loop is also compatible with <code>java.util.Map</code> and is used to
+    A binary tree in loop is also compatible with <code>Java.util.Map</code> and is used to
     associate keys to values. Its keys are, however, kept in natural sorted order which may be
     realized during iteration. We'll see more about this when looking at list comprehensions.
   </p>
@@ -731,7 +755,7 @@ starkify({ 'name' : 'Tyrion'})
 
   <p>
     Just as with lists, Loop provides a number of special syntax extensions for working with strings.
-    These are just normal java strings underneath. Let's look at a few: indexing works with strings exactly
+    These are just normal Java strings underneath. Let's look at a few: indexing works with strings exactly
     as it does with lists
   </p>
 
@@ -842,11 +866,11 @@ meta(print)
   <div class="code">
     <pre>print('hi'.toUpperCase().toLowerCase())
 print(22L.intValue())
-print(new java.util.Date().getClass().getName())
+print(new Java.util.Date().getClass().getName())
 
 => hi
 => 22
-=> java.util.Date</pre></div>
+=> Java.util.Date</pre></div>
 
   <p>
     Loop also provides a form for calling loop functions <i>the way you call methods</i>. This is know as the
@@ -916,7 +940,7 @@ triple(2)
     <pre># loop function
 'Now is the winter of our discontent'.to_lower()
 
-# java method
+# Java method
 'Now is the summer of our content'.toLowerCase()
 </pre></div>
   <p>
@@ -926,7 +950,7 @@ triple(2)
     <pre># loop function
 'Now is the winter of our discontent'.toLowerCase()
 
-# java method
+# Java method
 'Now is the summer of our content'<-toLowerCase()
 </pre></div>
 
@@ -964,7 +988,7 @@ print(~food.nutrition.calories~)
   </p>
 
   <div class="code">
-<pre>now: new java.util.Date()
+<pre>now: new Java.util.Date()
 
 print(~now.time~)
 
@@ -982,7 +1006,7 @@ print(~now.time~)
     realistic example:
   </p>
   <div class="code">
-<pre># java code
+<pre># Java code
 public class Person {
   private Person parent;
   private String name;
@@ -999,7 +1023,7 @@ public class Person {
 }
 
 
-# loop code that reads java object
+# loop code that reads Java object
 print("Gran's name is")
 print(~person.parent.parent.name~)
 
@@ -1074,7 +1098,7 @@ print(~person.parent.parent.name~)
   <p>
     Here i am saying, for every item in the given list <code>[1, 2, 3]</code>, multiply that item
     by 2. List comprehensions act on any kind of collection (all instances of
-    <code>java.util.Collection</code>) not just lists or sets; and they always produce lists of
+    <code>Java.util.Collection</code>) not just lists or sets; and they always produce lists of
     equal or smaller size.
   </p>
 
@@ -1601,7 +1625,7 @@ empty?([])
 
   <p>
     List patterns are among the most useful of pattern matching capabilities in loop. The basic
-    idea is to <i>destructure</i> a list into individual parts and process the items declaratively.
+    idea is to pull apart (<i>destructure</i>) a list into individual parts and process the items declaratively.
     As we'll see, this makes list processing code really easy to write <i>and</i> read.
   </p>
 
@@ -1630,7 +1654,7 @@ reverse([1, 2, 3, 4, 5])
   [x:rest]   : reverse(rest) + [x]</pre></div>
 
   <p>
-    the reverse of any list that has <i>at least one</i> item is the first item (<code>x</code>)
+    The reverse of any list that has <i>at least one</i> item is the first item (<code>x</code>)
     appended to the
     reverse of the <i>remaining</i> items (<code>rest</code>).
   </p>
@@ -1641,8 +1665,8 @@ reverse([1, 2, 3, 4, 5])
   ~[x:rest]   : reverse(rest) + [x]~</pre></div>
 
   <p>
-    this is what's known as a <i>recursive function</i>, meaning that it calls itself (recurses)
-    in order to complete its task. let's look at how this function destructures a simple list like
+    This is what's known as a <i>recursive function</i>, meaning that it calls itself (recurses)
+    in order to complete its task. Let's look at how this function destructures a simple list like
     <code>[1, 2, 3]</code>
   </p>
 
@@ -1655,14 +1679,14 @@ reverse([]):         []        : ~[]~
 => [3, 2, 1]</pre></div>
 
   <p>
-    each line above represents a call of the function. on the left are the arguments it is called
+    Each line above represents a call of the function. On the left are the arguments it is called
     with, and on the right the pattern rule that matched and its values, after destructuring.
-    what happens is that each additional recursive call gets a step closer to the empty list and
+    What happens is that each additional recursive call gets a step closer to the empty list and
     when you unravel this stack of calls, you get the list in reverse order.
   </p>
   <p>
-    read the rightmost part of the expression (in bold) from the bottom up to
-    illustrate this point
+    Read the rightmost part of the expression (in bold) from the bottom up to
+    illustrate the unraveling:
   </p>
 
   <div class="code">
@@ -1677,7 +1701,7 @@ reverse([]):         []        : ~[]~
   <h3>Object patterns</h3>
 
   <p>
-    any object (including maps) can also be pattern matched, like lists. the primary use is to
+    Any object (including maps and Java objects) can also be pattern matched, like lists. The primary use is to
     destructure object graphs and enable more declarative code that is easier to write and read.
   </p>
 
@@ -1687,7 +1711,7 @@ reverse([]):         []        : ~[]~
   ~{ g <- person.parent.parent }~   : g.name</pre></div>
 
   <p>
-    this will print the person's grandparent's name if you have an object graph that looks
+    This will print <code>person</code>'s grandparent's name, if you have an object graph that looks
     something like this:
   </p>
 
@@ -1704,7 +1728,7 @@ gran(billy)
 => Silly</pre></div>
 
   <p>
-    let's look at this code in a bit more detail:
+    Let's look at this code in a bit more detail:
   </p>
 
 
@@ -1713,8 +1737,8 @@ gran(billy)
   ~{ g <- person.parent.parent }~   : g.name</pre></div>
 
   <p>
-    first we have a new type of pattern rule, encased in braces - <code>{}</code>. this signals
-    to loop that the function should expect an object to destructure. next there is a variable,
+    First we have a new type of pattern rule, encased in braces - <code>{}</code>. This signals
+    to loop that the function should expect an object to destructure. Next there is a variable,
     <code>g</code>, followed by a <i>reverse</i> arrow <code><-</code>, which indicates that
     <code>g</code> should <i>receive</i> the result of the destructuring.
   </p>
@@ -1724,8 +1748,8 @@ gran(billy)
   { ~g <-~ person.parent.parent }   : g.name</pre></div>
 
   <p>
-    on the right side of the reverse arrow is the path expression in dot syntax. recall path
-    expressions from the section on <i>object navigation</i>. in this instance we are asking for
+    On the right side of the reverse arrow is the path expression in dot syntax. Recall path
+    expressions from the section on <i>object navigation</i>. In this instance we are asking for
     the <code>parent</code> of the <code>parent</code> of argument <code>person</code>.
   </p>
 
@@ -1734,7 +1758,7 @@ gran(billy)
   { g <- ~person.parent.parent~ }   : g.name</pre></div>
 
   <p>
-    finally on the right hand side of the rule itself, is another path expression
+    Finally on the right hand side of the rule itself, is another path expression
     <code>g.name</code>, which, is the result we want to return if this pattern rule matches.
   </p>
 
@@ -1744,7 +1768,7 @@ gran(billy)
   { g <- person.parent.parent }   : ~g.name~</pre></div>
 
   <p>
-    this is a rather simple example, and it can be rewritten as a standard function as follows:
+    This is a rather simple example, and it can be rewritten as a standard function as follows:
   </p>
 
 
@@ -1753,8 +1777,8 @@ gran(billy)
   person.parent.parent.name</pre></div>
 
   <p>
-    but for more complex object patterns, or for polymorphism, the pattern matching form is quite
-    useful. you can add as many destructurings as required in a single object pattern rule:
+    But for more complex object patterns, or for polymorphism, the pattern matching form is quite
+    useful. You can add as many destructurings as required in a single object pattern rule:
   </p>
 
 
@@ -1766,19 +1790,19 @@ gran(billy)
 => Billy's gran is Silly</pre></div>
 
   <p>
-    and also, mix object pattern rules with other kinds of patterns.
+    And you can also mix object pattern rules with other kinds of patterns.
   </p>
 
   <h3>String patterns</h3>
 
   <p>
-    string pattern matching is one are where loop shines. there are a variety of useful tools
-    for matching patterns in text. these can be combined to make quite powerful parsers and
+    String pattern matching is one area where loop really shines. There are a variety of useful tools
+    for matching patterns in text. These can be combined to make quite powerful parsers and
     text processors, that are readable and concise.
   </p>
 
   <p>
-    firstly, as you might guess, any string literal can be matched as a simple rule:
+    First, as you might guess, any string literal can be matched as a simple rule:
   </p>
 
 
@@ -1792,7 +1816,7 @@ numberize('two')
 
 => 2</pre></div>
 
-  <p>this scheme will also match symbols</p>
+  <p>This scheme will also match symbols:</p>
 
   <div class="code">
     <pre>numberize(str) =>
@@ -1805,7 +1829,7 @@ numberize(@two)
 => 2</pre></div>
 
   <p>
-    of course, for clarity you should use symbols directly in your pattern rule where appropriate:
+    Of course, for clarity you should use symbols directly in your pattern rule where appropriate:
   </p>
 
   <div class="code">
@@ -1819,7 +1843,7 @@ numberize(@two)
 => 2</pre></div>
 
   <p>
-    but this is just the tip of the iceberg. strings can also be destructured in a manner very
+    But this is just the tip of the iceberg. Strings can be destructured in a manner very
     similar to lists:
   </p>
 
@@ -1832,14 +1856,14 @@ initial('Megatron')
 => M</pre></div>
 
   <p>
-    here the destructuring works by pulling apart the leading character of the string. note that
+    Here the destructuring works by pulling apart the leading character of the string. Note that
     we use parentheses - <code>()</code> instead of brackets - <code>[]</code> in the pattern rule.
-    this is necessary to inform loop that we are matching a string and not a list.
+    This is necessary to inform loop that we are matching a string and not a list.
   </p>
 
   <p>
-    but strings can be destructured in even cooler ways. by specifying a delimiter, you can tell
-    loop to split a string around a particular character sequence:
+    But strings can be destructured in even cooler ways. By specifying a delimiter, you can tell
+    loop to split a string around a particular sequence:
   </p>
 
   <div class="code">
@@ -1851,12 +1875,12 @@ flip('Optimus Prime')
 => Prime, Optimus</pre></div>
 
   <p>
-    note that in this example, we use a single space to pattern match around. all the characters
+    Note that in this example, we use a single space to pattern match around. All the characters
     before it are destructured into <code>first</code> and those after it into <code>last</code>.
   </p>
 
   <p>
-    there is no limit to how many delimiters you can add to create a pattern:
+    There is no limit to how many delimiters you can add to create a pattern:
   </p>
 
   <div class="code">
@@ -1868,7 +1892,7 @@ select('A1B2C3D4')
 => 1234</pre></div>
 
   <p>
-    and there is no restriction on the length of the delimiters
+    And there is no restriction on the length of the delimiters:
   </p>
 
   <div class="code">
@@ -1884,7 +1908,7 @@ extract('Now is the summer of your content')
 => ~summer~</pre></div>
 
   <p>
-    you can use this technique recursively to process several lines, from a text file for example:
+    You can use this technique recursively to process several lines, from a text file for example:
   </p>
 
   <div class="code">
@@ -1903,12 +1927,12 @@ Perceptor,Astrotrain,Starscream,Soundwave
 => Soundwave</pre></div>
 
   <p>
-    notice the base case for the empty string, which is needed to terminate the recursion when
+    Notice the base case for the empty string, which is needed to terminate the recursion when
     the end of the file text is reached.
   </p>
 
   <p>
-    on top of this, loop also provides powerful regex pattern matching:
+    On top of this, loop also provides powerful regex pattern matching:
   </p>
 
   <div class="code">
@@ -1925,18 +1949,18 @@ judge('idle')
 => Lazy!</pre></div>
 
   <p>
-    in this instance, the regular expression (signified by bounding slashes - <code>//</code>) is
-    used to match whether or not the first rule should apply. it is slightly simpler than the
+    In this instance, the regular expression (signified by bounding slashes - <code>//</code>) is
+    used to match whether or not the first rule should apply. It is slightly simpler than the
     earlier examples in that it does not destructure the string in any way, instead is used to
     accept a more flexible range of inputs.
   </p>
 
   <p>
-    but! if you <i>really</i> want to destructure using a regex pattern, that is also
-    supported using a regex standard known as <i>named capturing groups</i>. a named capturing
+    But! If you <i>really</i> want to destructure using a regex pattern, that is also
+    possible using a regex standard known as <i>named capturing groups</i>. A named capturing
     group is any capturing group
     occurring inside a regular expression (enclosed in parentheses - <code>()</code>) that also is
-    tagged with a name. this is done using a special syntax.
+    tagged with a name. This is done using a special syntax.
     the name is then extracted and made available as a variable:
   </p>
 
@@ -1954,19 +1978,19 @@ extract('talking')
 => talk</pre></div>
 
   <p>
-    see <a href="http://www.regular-expressions.info/named.html">this website</a> for more
+    See <a href="http://www.regular-expressions.info/named.html">this website</a> for more
     information on named capturing groups and how to write them.
-    but do use them sparingly, excessive use of named groups can make regexes
+    But do use them sparingly, excessive use of named groups can make regexes
     (which are, let's face it, already quite messy) totally illegible.
   </p>
 
   <h3>Guards</h3>
 
   <p>
-    guards are an addendum to pattern matching and can be seen as an extra line of defense
-    for declarative code before resorting to if/then/elses function bodies. whereas pattern
+    Guards are an addendum to pattern matching and can be seen as an extra line of defense
+    for declarative code before resorting to if/then/elses function bodies. Whereas pattern
     rules focus on the type and structure of the data, guards
-    are meant to be able to test specific conditions using arbitrary logic. let's take a look:
+    are meant to be able to test specific conditions using arbitrary logic. Let's take a look:
   </p>
 
   <div class="code">
@@ -1986,8 +2010,8 @@ gender('Ms. Marple')
 => female</pre></div>
 
   <p>
-    the trick here is that a guard is just any boolean expression that allows the execution of
-    the right-hand expression if true. you can place arbitrary logic in a guard expression, as
+    The trick here is that a guard is just any boolean expression that allows the execution of
+    the right-hand expression if true. You can place arbitrary logic in a guard expression, as
     long as it evaluates to <code>true</code> or <code>false</code>:
   </p>
 
@@ -2000,21 +2024,21 @@ gender('Ms. Marple')
   ...</pre></div>
 
   <p>
-    in our case we're testing the salutation of a name against a number of literal values (Mr, Mrs
-    and Ms). but notice that we have an extra clause at the end, an <code>else</code> clause. this
-    is necessary if the pattern matches but none of the other guard expressions do. all guarded
+    In our case we're testing the salutation of a name against a number of literal values (Mr, Mrs
+    and Ms). But notice that we have an extra clause at the end, an <code>else</code> clause. This
+    is necessary if the pattern matches but none of the other guard expressions do. All guarded
     patterns <i>must</i> have an <code>else</code> expression (if you recall what we said about
     if/then/else expressions, this will make sense).
   </p>
 
   <p>
-    furthermore, it is important to distinguish between the <code>else</code> expression, which is
-    effectively the default case against a <i>matched</i> pattern and the wilcard
+    Furthermore, it is important to distinguish between the <code>else</code> expression, which is
+    effectively the default case against a <i>matched</i> pattern and the wildcard
     pattern--which is a catchall if no <i>patterns</i> matched.
   </p>
 
   <p>
-    in the example case we can trigger the else clause by specifying any string that is missing
+    In the example case we can trigger the else clause by specifying any string that is missing
     a salutation:
   </p>
 
@@ -2024,24 +2048,24 @@ gender('Ms. Marple')
 => unknown</pre></div>
 
   <p>
-    this is different from the wilcard rule, which matches anything that failed the previous
+    This is different from the wilcard rule, which matches anything that failed the previous
     patterns (and is effectively polymorphic):
   </p>
 
   <div class="code">
-    <pre>gender(22)
+    <pre>gender(\22\)
 
-=> error</pre></div>
+=> \#error: non-exhaustive pattern rules\</pre></div>
 
   <p>
-    in a sense, you can think of guards as analogous to a <code>switch</code> statement in c or
-    java, except that they can handle any kind of expression, and do so in linear order. a better
-    analogue might be an if-elseif-elseif-elseif-... style block, with a final else. except that
+    In a sense, you can think of guards as analogous to a <code>switch</code> statement in C or
+    Java, except that they can handle any kind of expression, and do so in linear order. A better
+    analogue might be an if-elseif-elseif-elseif-... style block, with a final else. Except that
     guards are far easier to read and far simpler to write.
   </p>
 
   <p>
-    here is a guarded function that determines if an integer falls into predefined ranges:
+    Here is a guarded function that determines if an integer falls into predefined ranges:
   </p>
 
   <div class="code">
@@ -2060,36 +2084,36 @@ range(-6)
 => negative</pre></div>
 
   <p>
-    notice how the order of evaluation played a part in our function, which correctly classifies
+    Notice how the order of evaluation played a part in our function, which correctly classifies
     values between 0 and 100 as small, even though the <code>@small</code> rule is only written to check for
-    <code>x < 100</code>. using guards this way makes complex branching easy to visualize and
+    <code>x < 100</code>. Using guards this way makes complex branching easy to visualize and
     reason about.
   </p>
 
   <p>
-    sometimes people are confused between when you need to use a guard and when you use just another
-    pattern rule. there are no strict guidelines about this, but one way to think of it that
-    patterns are about the structure of objects, and guards about their <i>value</i>, or data.
+    Sometimes people are confused between when you need to use a guard and when you use just another
+    pattern rule. There are no strict guidelines about this, but one way to think of it that
+    patterns are about the structure of objects, and guards about their <i>value</i> (or data).
   </p>
 
   <p>
-    this distinction becomes clear when you consider that pattern rules do not cause any functions
-    to be called, whereas guards often do. meaning that pattern rules describe the static behavior
-    of the program (what types are accepted, what structure of objects or pattern of strings), and
+    This distinction becomes clear when you consider that pattern rules do not cause any functions
+    to be called, whereas guards often do. Meaning that pattern rules describe the static behavior
+    of the program (what types are accepted, what structure of objects, or pattern of strings), and
     guards describe the dynamic behavior of the program, i.e. what result is produced if a
     condition is satisfied.
   </p>
 
   <p>
-    guards are useful in a variety of situations, and they may be applied on any kind
-    of pattern rule. look at some loop examples to get a feel for how guards can be used.
+    Guards are useful in a variety of situations, and they may be applied on any kind
+    of pattern rule. Look at some <a href="https://github.com/dhanji/loop/tree/master/test/loop/confidence">Loop examples</a> to get a feel for how guards can be used.
   </p>
 
   <h2>Control flow</h2>
 
   <p>
-    since loop is a jvm language, it honors the java system of exceptions for handling control
-    flow in error cases. loop exceptions are just java exceptions except that it does not support
+    Since loop is a JVM language, it honors the Java system of exceptions for handling control
+    flow in error cases. Loop exceptions are just Java exceptions except that it does not support
     the concept of <i>checked exceptions</i>. all exceptions in loop are <i>unchecked</i>,
     usually a kind of <code>RuntimeException</code>.
   </p>
@@ -2097,7 +2121,7 @@ range(-6)
   <h3>Raising exceptions</h3>
 
   <p>
-    exceptions in loop are <i>thrown</i> using the <code>raise()</code> function which is always
+    Exceptions in loop are <i>thrown</i> using the <code>raise()</code> function which is always
     available in all programs:
   </p>
 
@@ -2111,14 +2135,14 @@ main ->
 => \#error: divide by zero\</pre></div>
 
   <p>
-    this simplistic function checks if the divisor is equal to <code>0</code> and raises an
-    exception if so. the function <code>raise()</code> terminates execution immediately and
+    This simplistic function checks if the divisor is equal to <code>0</code> and raises an
+    exception if so. The function <code>raise()</code> terminates execution immediately and
     unravels the function stack until it is <i>handled</i> or the program exits in error.
   </p>
 
   <p>
-    the familiar jvm <i>stack trace</i>, showing each function call in the chain of execution that
-    led to this exception, is generated properly by all loop programs. here's an example:
+    The familiar JVM <i>stack trace</i> showing each function call in the chain of execution that
+    led to this exception is generated properly by all Loop programs. Here's an example:
   </p>
   <div class="code">
     <pre>java.lang.RuntimeException: ~divide by zero~
@@ -2127,14 +2151,14 @@ main ->
     at _default.main(test.loop:6)</pre></div>
 
   <p>
-    by default, <code>raise()</code> throws a <code>java.lang.RuntimeException</code> with an
+    By default, <code>raise()</code> throws a <code>java.lang.RuntimeException</code> with an
     embedded cause message.
     (this example presupposes that the <code>divide_by()</code> function is saved in a file called
     <code>test.loop</code>, which is called from the command line using the loop runtime.)
   </p>
 
   <p>
-    otherwise, it is nice to see that the trace points correctly to the offending line of code,
+    Otherwise, it is nice to see that the trace points correctly to the offending line of code,
     line #3 in <code>test.loop</code>:
   </p>
   <div class="code">
@@ -2143,21 +2167,21 @@ main ->
     ~at _default.divide_by(test.loop:3)~
     at _default.main(test.loop:6)</pre></div>
   <p>
-    you may also note that the stack trace is
-    clean, and only presents loop functions with none of the intermediate java gunk that other
-    jvm languages often leave behind.
+    You may also note that the stack trace is
+    clean, and only presents Loop functions with none of the intermediate Java gunk that other
+    JVM languages sometimes leave behind.
   </p>
 
   <p>
-    of course, if your loop code calls third-party java methods you may see it after all ;)
+    Of course, if your loop code calls third-party Java methods you may see it after all ;)
   </p>
 
   <h3>Handling exceptions</h3>
 
   <p>
-    exceptions in loop are handled via a specialization of pattern matching functions called
-    <i>handler</i> forms. these are pretty much just a normal pattern matching function, but with
-    some additional constraints imposed. let's try to handle the divide-by-zero error from the
+    Exceptions in loop are handled via a specialization of pattern matching functions called
+    <i>handler</i> forms. These are pretty much the same as a pattern matching function, but with
+    some additional constraints imposed. Let's try to handle the divide-by-zero error from the
     previous example:
   </p>
 
@@ -2173,18 +2197,17 @@ main ->
 => divide by zero</pre></div>
 
   <p>
-    there are a couple of changes we've made here. firstly, there is a new function simply called
-    <code>handler()</code> (you can call it whatever you want). secondly, we have added a clause
-    to the <code>divide_by()</code> function which reads <code>except handler</code>. this is the
+    There are a couple of changes we've made here. Firstly, there is a new function simply called
+    <code>handler()</code> (you can call it whatever you want). Secondly, we have added a clause
+    to the <code>divide_by()</code> function which reads <code>except handler</code>. This is the
     exception handler clause which tells loop to catch exceptions thrown by the declaring function
     and hand them off to the specified function for processing.
   </p>
 
   <p>
-    furthermore, we see that this time there is no error, instead we simply get back the message
+    Furthermore, we see that this time there is no error, instead we simply get back the message
     <code>divide by zero</code>, which was extracted from the exception object itself:
   </p>
-
 
   <div class="code">
     <pre>divide_by(x, y) except handler ->
@@ -2223,7 +2246,7 @@ handler(e) =>
     as if nothing abnormal happened. Otherwise, the exception is rethrown.
   </p>
 
-  <h3>Handling java exceptions</h3>
+  <h3>Handling Java exceptions</h3>
 
   <p>
     Of course, loop's simple exceptions aren't the only kind you'll have to deal with. Java
@@ -2569,16 +2592,16 @@ name_age(new Person(name: 'Nikola Tesla',
   </p>
 
   <div class="code">
-    <pre>print(`java.util.Date`)
+    <pre>print(`Java.util.Date`)
 
-=> java.util.Date</pre></div>
+=> Java.util.Date</pre></div>
 
   <p>
     This is the equivalent of the following Java code fragment:
   </p>
 
   <div class="code">
-    <pre>System.out.println(java.util.Date.class)</pre></div>
+    <pre>System.out.println(Java.util.Date.class)</pre></div>
 
   <h2>Modules</h2>
 
