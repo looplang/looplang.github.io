@@ -167,11 +167,10 @@ new java.util.Date(1).time
 greet(name) ->
   "hi, @{name}!"
 
-main ->
-  'Zaphod Beeblebrox'.greet()</pre>
+'Zaphod Beeblebrox'.~greet()~</pre>
   </div>
   <p>
-    loop behaves well with java exceptions
+    loop produces clear, useful stack traces when things go wrong
   </p>
   <div class="code">
 <pre>java.lang.RuntimeException: i'm complaining
@@ -188,9 +187,9 @@ main ->
     <ul class="features">
       <li><img src="images/arrow_right.png" alt="bullet arrow">closures</li>
       <li><img src="images/arrow_right.png" alt="bullet arrow">null-safety</li>
-      <li><img src="images/arrow_right.png" alt="bullet arrow">tail call optimization</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">java interoperability</li>
       <li><img src="images/arrow_right.png" alt="bullet arrow">built-in concurrency</li>
-      <li><img src="images/arrow_right.png" alt="bullet arrow">object pattern matching</li>
+      <li><img src="images/arrow_right.png" alt="bullet arrow">pattern matching + guards</li>
     </ul>
     <button id="getStarted" class="button-blue" onclick="window.location ='/doc/#gettingstarted';">Get Started &raquo;</button>
   </div>

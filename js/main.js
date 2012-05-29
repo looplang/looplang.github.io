@@ -23,6 +23,8 @@ function escape(token) {
 }
 
 $(function() {
+  var pointer = $('#pointer');
+
   // First hide all the examples, to put them into our slideshow.
   $('div.code ol > li').css('display', 'none');
 
@@ -105,6 +107,8 @@ $(function() {
   });
 
   var spin = function(forward) {
+    pointer.hide();
+
     var target = $('#scriptTitle');
     var parent = target.parent();
     var visibleLi = parent.find('ol > li.on');
@@ -138,7 +142,6 @@ $(function() {
   });
 
   // Hide the training wheels.
-  var pointer = $('#pointer');
   pointer.animate({
     rotate: '15deg',
     translateY: '12px',
@@ -159,7 +162,7 @@ $(function() {
           }, 200, function() {
             pointer.remove();
           });
-        }, 700);
+        }, 4000);
       });
     })
   });
