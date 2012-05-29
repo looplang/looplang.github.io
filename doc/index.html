@@ -1393,8 +1393,7 @@ func3 ->
     <pre>manipulate(ls, func) ->
   func.@call(i) for i in ls
 
-manipulate([1, 2, 3], @(x) ->
-                        x * 5)
+manipulate([1, 2, 3], @(x) -> { x * 5 })
 
 => [5, 10, 15]</pre></div>
 
@@ -1404,7 +1403,20 @@ manipulate([1, 2, 3], @(x) ->
     meta-function <code>manipulate()</code>, which takes a list of items and calls the given
     function for each item in the list.
   </p>
+  <p>
+    Notice that the closure's expression is housed inside braces - <code>{}</code>. This is done
+    to clearly distinguish code belonging to the anonymous function from outer code. Using
+    braces also means you can put the expression on multiple lines and retain readability:
+  </p>
+  <div class="code">
+    <pre>manipulate(ls, func) ->
+  func.@call(i) for i in ls
 
+manipulate([1, 2, 3], ~@(x) -> {
+                        x * 5
+                      }~)
+
+=> [5, 10, 15]</pre></div>
   <p>
     The nice thing about closures is that they can refer to values in scope at the time of their
     creation long after the scope is lost:
