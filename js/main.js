@@ -133,6 +133,7 @@ $(function() {
   // Setup spinner.
   $('#scriptTitle').click(function() {
     spin(true);
+    return false;
   });
 
   // Arrow keys to move backwards.
