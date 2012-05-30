@@ -746,10 +746,10 @@ starkify({ 'name' : 'Tyrion'})
   </p>
   <div class="code">
     <pre>{ @houses: { 'Lannister', 'Stark', 'Targaryen' },
-  @protagonists: { 'Jon', 'Dany', 'Tyrion' }
-  @locations: [ 'Winterfell'   : 'Stark',
-                'Targaryen'    : 'Dragonstone',
-                'Casterly Rock : 'Lannister' ]}</pre></div>
+  @protagonists: { 'Jon', 'Dany', 'Tyrion' },
+  @locations: [ 'Winterfell'    : 'Stark',
+                'Targaryen'     : 'Dragonstone',
+                'Casterly Rock' : 'Lannister' ]}</pre></div>
 
   <h3>String manipulation</h3>
 
@@ -873,7 +873,7 @@ print(new java.util.Date().getClass().getName())
 => java.util.Date</pre></div>
 
   <p>
-    Loop also provides a form for calling loop functions <i>the way you call methods</i>. This is know as the
+    Loop also provides a form for calling loop functions <i>the way you call methods</i>. This is known as the
     <i>call-as-method</i> feature. Let's define a simple loop function <code>triple()</code> that
     takes an integer and multiplies it by 3.
   </p>
@@ -1456,7 +1456,7 @@ make(10).@call()
 
 speak(2)
 
-=> 2</pre></div>
+=> two</pre></div>
 
   <p>
     This is a naively simple pattern matching function that tests if the value passed in is either
@@ -1471,7 +1471,7 @@ speak(2)
 
 speak(2)
 
-=> 2</pre></div>
+=> two</pre></div>
 
   <p>
     ...much less readable.
@@ -1925,7 +1925,7 @@ extract('Now is the summer of your content')
 
   <div class="code">
     <pre>uncomma(str) =>
-  ''                     : ''
+  ''                   : ''
   (word: ',' : ~rest~)   : word + '\n' + ~uncomma(rest)~
 
 uncomma(read('bots.csv'))
