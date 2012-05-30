@@ -151,7 +151,7 @@
     You will need Java 1.6 or higher already installed. Check if you have it by running:
   </p>
   <div class="code">
-<pre>$ ~Java -version~
+<pre>$ ~java -version~
 Java version "1.6.0_31"
 Java(TM) SE Runtime Environment
 Java HotSpot(TM) 64-Bit Server VM</pre>
@@ -212,7 +212,7 @@ $ loop
   </p>
 
   <div class="code">
-<pre>$ Java -jar loop.jar</pre>
+<pre>$ java -jar loop.jar</pre>
   </div>
 
 
@@ -242,7 +242,7 @@ hello there
   <div class="code">
     <pre>print(1 + 2)
 print(5 * 50 / 44)
-print(new Java.util.Date())</pre>
+print(new java.util.Date())</pre>
   </div>
   <p>
     These are called <i>free expressions</i> and may appear anywhere inside a loop function or
@@ -557,7 +557,7 @@ print(@2.3129038102938102938102938)
 
   <p>
     Lists are an essential component of programming in Loop, as as such they are supported
-    natively in syntax. All loop lists are perfectly compatible with <code>Java.util.List</code>
+    natively in syntax. All loop lists are perfectly compatible with <code>java.util.List</code>
     and like <code>String</code>, come with some nifty, loop-specific extensions.
   </p>
   <p>
@@ -625,7 +625,7 @@ pick(~[1..7]~)    # generate a list of 1-7
 
 => {1, 2, 3}</pre></div>
   <p>
-    Loop sets are fully compatible with <code>Java.util.Set</code> classes.
+    Loop sets are fully compatible with <code>java.util.Set</code> classes.
   </p>
 
   <h3>Maps</h3>
@@ -696,14 +696,14 @@ starkify({ 'name' : 'Tyrion'})
   </p>
 
   <p>
-    Like sets and lists, maps are also fully compatible with Java's <code>Java.util.Map</code>
+    Like sets and lists, maps are also fully compatible with Java's <code>java.util.Map</code>
     type.
   </p>
 
   <h3>Trees</h3>
   <p>
     Like sets are to lists, loop provides a simple syntactic abstraction to represent binary trees.
-    A binary tree in loop is also compatible with <code>Java.util.Map</code> and is used to
+    A binary tree in loop is also compatible with <code>java.util.Map</code> and is used to
     associate keys to values. Its keys are, however, kept in natural sorted order which may be
     realized during iteration. We'll see more about this when looking at list comprehensions.
   </p>
@@ -866,11 +866,11 @@ meta(print)
   <div class="code">
     <pre>print('hi'.toUpperCase().toLowerCase())
 print(22L.intValue())
-print(new Java.util.Date().getClass().getName())
+print(new java.util.Date().getClass().getName())
 
 => hi
 => 22
-=> Java.util.Date</pre></div>
+=> java.util.Date</pre></div>
 
   <p>
     Loop also provides a form for calling loop functions <i>the way you call methods</i>. This is know as the
@@ -988,7 +988,7 @@ print(~food.nutrition.calories~)
   </p>
 
   <div class="code">
-<pre>now: new Java.util.Date()
+<pre>now: new java.util.Date()
 
 print(~now.time~)
 
@@ -1098,7 +1098,7 @@ print(~person.parent.parent.name~)
   <p>
     Here i am saying, for every item in the given list <code>[1, 2, 3]</code>, multiply that item
     by 2. List comprehensions act on any kind of collection (all instances of
-    <code>Java.util.Collection</code>) not just lists or sets; and they always produce lists of
+    <code>java.util.Collection</code>) not just lists or sets; and they always produce lists of
     equal or smaller size.
   </p>
 
@@ -2604,16 +2604,16 @@ name_age(new Person(name: 'Nikola Tesla',
   </p>
 
   <div class="code">
-    <pre>print(`Java.util.Date`)
+    <pre>print(`java.util.Date`)
 
-=> Java.util.Date</pre></div>
+=> java.util.Date</pre></div>
 
   <p>
     This is the equivalent of the following Java code fragment:
   </p>
 
   <div class="code">
-    <pre>System.out.println(Java.util.Date.class)</pre></div>
+    <pre>System.out.println(java.util.Date.class)</pre></div>
 
   <h2>Modules</h2>
 
