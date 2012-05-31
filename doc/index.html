@@ -608,7 +608,7 @@ pick(~[1..7]~)    # generate a list of 1-7
 
 => [1, 2, 3]</pre></div>
   <p>
-    The range syntax is very similar to the slice syntax except that slices must on some existing
+    The range syntax is very similar to the slice syntax except that slices must operate on some existing
     list (in the above cases, a list variable, <code>ls</code>). So keep that in mind when reading
     Loop code.
   </p>
@@ -2854,6 +2854,67 @@ print('hi there')
 
   <p>
     To be documented.
+  </p>
+
+  <h3>Importing jars</h3>
+
+  <p>
+    We've seen how to refer to Java classes, constructors and static methods in the previous
+    sections. These suffice for any of the APIs provided with the JDK itself, however if you want
+    to import third-party Java libraries, you need to provide them to your programs first.
+  </p>
+
+  <p>
+    If using the <code>loop</code> shell script bundled with the launcher, this is very simple.
+    First, create yourself a directory called <code>lib</code> under the directory where your
+    Loop program files are (this can be anywhere in your system, and can be completely independent
+    of where you unzipped the Loop distribution). Now, place any third-party <i>.jar</i> files in
+    the <code>lib</code> directory and they will automatically be loaded when running your program.
+  </p>
+
+  <div class="code">
+    <pre>$ ls lib/
+joda-time-2.0.jar</pre></div>
+
+  <p>
+    In the above example, I have placed the third-party jar for <code>joda-time</code> in my <code>lib</code>
+    directory. Now when I run any Loop program that refers to joda-time classes, it will load them
+    from the provided jar file. Here's a sample program (called <code>time.loop</code>):
+  </p>
+
+  <div class="code">
+    <pre>require `org.joda.time.DateTime`
+
+print(new DateTime())</pre></div>
+
+  <p>
+    To run it, use the same command line as you are familiar with (but make sure to do it from
+    the same directory as the <code>time.loop</code> program file):
+  </p>
+
+  <div class="code">
+    <pre>$ loop time.loop
+~2012-05-31T21:40:44.554+10:00~</pre></div>
+
+  <p>
+    The output is a string representation of joda-time's <code>DateTime</code> object, holding the
+    current system time. You can add any number of jar files this way, to create a library for your
+    Loop program.
+  </p>
+
+  <h4>Classpath</h4>
+  <p>
+    If for some reason you don't want to use the <code>lib</code> directory or want to import jars
+    in another location, you can directly launch the required jars using a java command line as
+    follows:
+  </p>
+
+  <div class="code">
+    <pre>$ java -cp /path/to/loop.jar:[deps] loop.Loop time.loop</pre></div>
+
+  <p>
+    Note that the deps must be separated by a <code>:</code> and remember to replace
+    <code>/path/to/</code> with the real path to your unzipped loop distribution.
   </p>
 
   <h2>Concurrency</h2>
