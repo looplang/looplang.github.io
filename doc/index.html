@@ -2065,7 +2065,7 @@ gender('Ms. Marple')
   </p>
 
   <div class="code">
-    <pre>gender(\22\)
+    <pre>gender( \22\ )
 
 => \#error: non-exhaustive pattern rules\</pre></div>
 
@@ -2139,7 +2139,7 @@ range(-6)
 
   <div class="code">
     <pre>divide_by(x, y) ->
-  if y != 0 then x / y else ~raise~('divide by zero')
+  if y not 0 then x / y else ~raise~('divide by zero')
 
 main ->
   1.divide_by(0)
@@ -2199,7 +2199,7 @@ main ->
 
   <div class="code">
     <pre>divide_by(x, y) ~except handler~ ->
-  if y != 0 then x / y else raise('divide by zero')
+  if y not 0 then x / y else raise('divide by zero')
 
 ~handler~(e) =>
   *      : e.message
@@ -2223,7 +2223,7 @@ main ->
 
   <div class="code">
     <pre>divide_by(x, y) except handler ->
-  if y != 0 then x / y else raise('divide by zero')
+  if y not 0 then x / y else raise('divide by zero')
 
 handler(e) =>
   *      : ~e.message~
@@ -2242,7 +2242,7 @@ handler(e) =>
   </p>
   <div class="code">
     <pre>divide_by(x, y) except handler ->
-  if y != 0 then x / y else raise(~'dbz'~)
+  if y not 0 then x / y else raise(~'dbz'~)
 
 handler(e) =>
   { msg <- e.message }  | ~msg == 'dbz'~  : 0
