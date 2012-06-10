@@ -215,6 +215,22 @@ $ loop
 <pre>$ java -jar loop.jar</pre>
   </div>
 
+  <h4>Building from source</h4>
+  <p>
+    If you prefer to build Loop yourself you will need Maven 3 installed. First clone down the git repo,
+    then run the following maven command:
+  </p>
+
+  <div class="code">
+<pre>$ git clone https://github.com/dhanji/loop.git
+$ mvn clean package assembly:single</pre>
+  </div>
+
+  <p>
+    This will produce a self-contained JAR in <code>target/</code> called <code>loop-with-dependencies-1.0.jar</code>,
+    or something like that. You can rename this to <code>loop.jar</code> and launch it with the <code>loop</code> shell
+    script by setting the <code>LOOP_HOME</code> environment variable appropriately.
+  </p>
 
   <h3>My first loop</h3>
   <p>
