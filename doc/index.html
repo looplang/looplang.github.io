@@ -1259,10 +1259,10 @@ j_option_pane.showMessageDialog(Nothing, 'hi there')
 
   <div class="code">
     <pre>do_stuff() ->
-  print('hit any key to continue...'),
-  pause(),
-  print('no, hit the ANY key to continue...'),
-  pause(),
+  print('hit any key to continue...')
+  pause()
+  print('no, hit the ANY key to continue...')
+  pause()
   print('done!')
 
 => hit any key to continue...
@@ -1279,8 +1279,7 @@ j_option_pane.showMessageDialog(Nothing, 'hi there')
 
   <p>
     It is often useful to define a set of values and functions specifically for a purpose. Loop
-    provides a lightweight and simple system to accomplish this (again, should be familar to
-    Haskell programmers):
+    provides a lightweight and simple system to accomplish this:
   </p>
 
   <div class="code">
@@ -1315,7 +1314,23 @@ print(\year\)
 => \#error\</pre></div>
 
   <p>
-    You can even declare functions in local scope this way:
+    This is exactly equivalent to the following, more familiar looking code:
+  </p>
+
+  <div class="code">
+    <pre>minutes_in(num) ->
+  hour = 60
+  day  = 24 * hour
+  week = 7 * day
+  year = 52 * week
+  num * year
+
+print(\year\)
+
+=> \#error\</pre></div>
+
+  <p>
+    You can even declare functions in local scope:
   </p>
   <div class="code">
     <pre>initials(name) ->
@@ -2610,6 +2625,19 @@ name_age(new Person(name: 'Nikola Tesla',
     example, I'm calling the method <code>println()</code> which simply outputs a string to the
     console. In fact, this is exactly how Loop's own <code>print()</code> function works internally.
   </p>
+
+  <h3>Imports</h3>
+
+  <p>
+    This code can be written shorter with a type import from java-space:
+  </p>
+
+  <div class="code">
+    <pre>require java.lang.System
+
+~System::println('hi')~
+
+=> hi</pre></div>
 
   <h3>Type references</h3>
 
