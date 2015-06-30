@@ -1,1 +1,1 @@
-See [looplang.github.op] for more info.
+See [looplang.github.io]() for more info.
