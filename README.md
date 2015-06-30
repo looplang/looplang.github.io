@@ -1,1 +1,1 @@
-See [http://looplang.org](http://looplang.org) for more info.
+See [looplang.github.op] for more info.
