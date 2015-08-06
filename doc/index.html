@@ -1218,14 +1218,21 @@ j_option_pane.showMessageDialog(Nothing, 'hi there')
   </p>
   <p>
     Additionally, Loop does not permit <code>Nothing</code> in computations. It is a type error to
-    attempt to compute with <code>Nothing</code>.
+    attempt to compute with <code>Nothing</code>. 
   </p>
 
   <div class="code">
 <pre>1 + \Nothing\
 
 => \#error\</pre></div>
-
+ 
+  <p>
+    This is somewhat of an escape-hatch to the bottom-type rigor. While, strictly speaking, 1 and
+    <code>Nothing</code> are type-compatible, loop prevents mixed-type computations involving the
+    bottom-type. This is to prevent absurd questions like determining the value of Nothing in the context
+    of another type. Nothing is both the sentinel value for all types and the is <i>contravariant</i> with
+    all types. This is the sane choice when dealing with a bottom-type.
+  </p>
 
   <h2>Functions</h2>
 
@@ -1414,10 +1421,13 @@ func3 ->
   <h3>Closures</h3>
 
   <p>
-    Closures, or <i>anonymous functions</i>, are quite useful in a language like loop where functions
+    Anonymous functions, are quite useful in a language like loop where functions
     are a first-class construct. Because they can be held in variables and passed around, it is
     sometimes useful to create small blocks of functionality that aren't necessarily declared
-    as top-level or scoped functions. These are called closures:
+    as top-level or scoped functions. These blocks of code <i>capture</i> the variables in the nearest
+    surrounding scope (i.e. they "close over" the current lexical scope).
+    
+    These are called closures:
   </p>
 
   <div class="code">
